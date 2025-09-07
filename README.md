@@ -45,7 +45,7 @@ class ChordProgressionGenerator {
         // Инициализация DOM элементов
         this.keySelect = document.getElementById('key-select');
         this.modeSelect = document.getElementById('mode-select');
-        this.generateBtn = document.getElementById('generate-btn');
+        // this.generateBtn = document.getElementById('generate-btn');
         this.progressionsDiv = document.getElementById('progressions');
         this.visualizationDiv = document.getElementById('visualization');
         this.bassNotesDiv = document.getElementById('bass-notes');

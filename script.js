@@ -4,7 +4,7 @@ class ChordProgressionGenerator {
     constructor() {
         this.keySelect = document.getElementById('key-select');
         this.modeSelect = document.getElementById('mode-select');
-        this.generateBtn = document.getElementById('generate-btn');
+        // this.generateBtn = document.getElementById('generate-btn');
         this.progressionsDiv = document.getElementById('progressions');
         this.visualizationDiv = document.getElementById('visualization');
         this.bassNotesDiv = document.getElementById('bass-notes');
@@ -20,7 +20,7 @@ class ChordProgressionGenerator {
             await window.i18n.init();
         }
 
-        this.generateBtn.addEventListener('click', () => this.generate());
+        // this.generateBtn.addEventListener('click', () => this.generate());
 
         // Слушаем изменения селекторов
         this.keySelect.addEventListener('change', () => this.updateAll());

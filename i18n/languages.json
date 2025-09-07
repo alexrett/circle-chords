@@ -8,7 +8,7 @@
       "key": "Тональность:",
       "mode": "Лад:",
       "generate": "Сгенерировать",
-      "language": "Язык:"
+      "language": "🇬🇧/ 🇷🇺:"
     },
     "modes": {
       "major": "Мажор",
@@ -97,7 +97,7 @@
       "key": "Key:",
       "mode": "Mode:",
       "generate": "Generate",
-      "language": "Language:"
+      "language": "🇷🇺/ 🇬🇧:"
     },
     "modes": {
       "major": "Major",
