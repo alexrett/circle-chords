@@ -375,6 +375,47 @@ select:focus {
     user-select: none;
 }
 
+.interactive-circle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 0 10px;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.interactive-circle-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.interactive-circle-svg {
+    display: flex;
+    justify-content: center;
+}
+
+.interactive-circle {
+    transition: transform 0.2s ease;
+}
+
+.interactive-circle:hover {
+    transform: scale(1.02);
+}
+
+.tonality-selector {
+    transition: fill 0.2s ease, opacity 0.2s ease;
+}
+
+.tonality-selector:hover {
+    opacity: 0.8;
+}
+
 @media (max-width: 768px) {
     .controls {
         flex-direction: column;
@@ -383,5 +424,10 @@ select:focus {
 
     .chords-list {
         justify-content: center;
+    }
+
+    .interactive-circle-container {
+        margin: 10px 0;
+        order: 3;
     }
 }

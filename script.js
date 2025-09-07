@@ -8,12 +8,54 @@ class ChordProgressionGenerator {
         this.progressionsDiv = document.getElementById('progressions');
         this.visualizationDiv = document.getElementById('visualization');
         this.bassNotesDiv = document.getElementById('bass-notes');
+        this.interactiveCircleContainer = document.getElementById('interactive-circle-container');
+        this.circleOfFifths = new CircleOfFifths();
         this.init();
     }
+
     init() {
         this.generateBtn.addEventListener('click', () => this.generate());
+
+        // Слушаем изменения селекторов
+        this.keySelect.addEventListener('change', () => this.updateAll());
+        this.modeSelect.addEventListener('change', () => this.updateAll());
+
+        // Инициализируем интерактивный круг
+        this.updateInteractiveCircle();
         this.generate();
     }
+
+    // Обработчик изменения тональности через круг
+    onTonalityChange(key, mode) {
+        // Обновляем селекторы
+        this.keySelect.value = key;
+        this.modeSelect.value = mode;
+
+        // Обновляем круг и генерируем новые прогрессии
+        this.updateAll();
+    }
+
+    // Обновить интерактивный круг
+    updateInteractiveCircle() {
+        const currentKey = this.keySelect.value;
+        const currentMode = this.modeSelect.value;
+
+        const interactiveCircle = this.circleOfFifths.renderInteractiveContainer(
+            currentKey,
+            currentMode,
+            (key, mode) => this.onTonalityChange(key, mode)
+        );
+
+        this.interactiveCircleContainer.innerHTML = '';
+        this.interactiveCircleContainer.appendChild(interactiveCircle);
+    }
+
+    // Обновить всё (круг и прогрессии)
+    updateAll() {
+        this.updateInteractiveCircle();
+        this.generate();
+    }
+
     generate() {
         const key = this.keySelect.value;
         const mode = this.modeSelect.value;
