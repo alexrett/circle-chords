@@ -11,48 +11,81 @@ class ChordPlayer {
         if (this.isInitialized) return;
 
         try {
-            // Создаем полисинт для проигрывания аккордов
+            // Создаем гитарный синтезатор для аккордов
             this.synth = new Tone.PolySynth(Tone.Synth, {
                 oscillator: {
-                    type: "sawtooth"
+                    type: "triangle", // Более мягкий звук чем sawtooth
+                    modulationType: "square",
+                    harmonicity: 2
                 },
                 envelope: {
-                    attack: 0.1,
-                    decay: 0.2,
-                    sustain: 0.5,
-                    release: 0.8
+                    attack: 0.01,    // Быстрая атака как удар по струне
+                    decay: 0.3,      // Быстрое затухание
+                    sustain: 0.2,    // Низкий сустейн
+                    release: 2.5     // Долгое затухание как у гитары
+                },
+                filter: {
+                    frequency: 3000,  // Убираем высокие частоты
+                    type: "lowpass",
+                    rolloff: -12
                 }
-            }).toDestination();
+            });
 
-            // Создаем бас-синт (более низкий и глухой звук)
+            // Добавляем реверб для гитарного звучания
+            const reverb = new Tone.Reverb({
+                decay: 2,
+                wet: 0.3
+            });
+
+            // Добавляем компрессор для естественности
+            const compressor = new Tone.Compressor({
+                threshold: -24,
+                ratio: 8,
+                attack: 0.003,
+                release: 0.1
+            });
+
+            // Соединяем эффекты: синт -> компрессор -> реверб -> выход
+            this.synth.chain(compressor, reverb, Tone.Destination);
+
+            // Создаем бас-синт (имитация бас-гитары)
             this.bassSynth = new Tone.MonoSynth({
+                oscillator: {
+                    type: "triangle"
+                },
+                envelope: {
+                    attack: 0.02,
+                    decay: 0.4,
+                    sustain: 0.3,
+                    release: 1.2
+                },
+                filter: {
+                    frequency: 200,   // Очень низкие частоты для баса
+                    rolloff: -24
+                }
+            });
+
+            // Добавляем дисторшн для бас-гитары
+            const bassDistortion = new Tone.Distortion(0.4);
+            const bassCompressor = new Tone.Compressor(-18, 4);
+            this.bassSynth.chain(bassDistortion, bassCompressor, Tone.Destination);
+
+            // Создаем вокальный синт (более чистый звук)
+            this.vocalSynth = new Tone.Synth({
                 oscillator: {
                     type: "sine"
                 },
                 envelope: {
                     attack: 0.05,
-                    decay: 0.3,
-                    sustain: 0.4,
-                    release: 0.6
-                },
-                filter: {
-                    frequency: 400,
-                    rolloff: -24
+                    decay: 0.2,
+                    sustain: 0.7,
+                    release: 0.8
                 }
-            }).toDestination();
+            });
 
-            // Создаем вокальный синт (более яркий и мелодичный)
-            this.vocalSynth = new Tone.Synth({
-                oscillator: {
-                    type: "triangle"
-                },
-                envelope: {
-                    attack: 0.08,
-                    decay: 0.15,
-                    sustain: 0.6,
-                    release: 0.4
-                }
-            }).toDestination();
+            // Добавляем небольшой хорус для вокала
+            const chorus = new Tone.Chorus(4, 2.5, 0.5);
+            this.vocalSynth.chain(chorus, Tone.Destination);
 
             // Инициализируем аудио контекст
             await Tone.start();
