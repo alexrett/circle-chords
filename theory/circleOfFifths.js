@@ -150,76 +150,53 @@ class CircleOfFifths {
         }
 
         // Центральная надпись
+        const modeText = window.i18n ? window.i18n.t(`circle.${currentMode}`) : (currentMode === 'major' ? 'мажор' : 'минор');
         svg += `<text x="${centerX}" y="${centerY - 10}" text-anchor="middle" dominant-baseline="middle" 
                 font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#495057">
-                ${currentKey} ${currentMode === 'major' ? 'мажор' : 'минор'}</text>`;
+                ${currentKey} ${modeText}</text>`;
 
+        const circleTitle = window.i18n ? window.i18n.t('circle.circleTitle') : 'Квинтовый круг';
         svg += `<text x="${centerX}" y="${centerY + 10}" text-anchor="middle" dominant-baseline="middle" 
                 font-family="Arial, sans-serif" font-size="10" fill="#6c757d">
-                Квинтовый круг</text>`;
+                ${circleTitle}</text>`;
 
         svg += '</svg>';
         return svg;
     }
 
-    // Создать контейнер с квинтовым кругом
-    renderCircleContainer(currentKey, currentMode, chordProgression, progressionName) {
+    // Создать контейнер с кругом
+    renderCircleContainer(key, mode, chords, progressionName) {
         const container = document.createElement('div');
-        container.className = 'circle-of-fifths-container';
+        container.className = 'circle-container';
 
         const title = document.createElement('h4');
-        title.textContent = `Квинтовый круг для "${progressionName}"`;
-        title.className = 'circle-title';
-        container.appendChild(title);
-
-        const description = document.createElement('p');
-        description.innerHTML = `
-            <strong>Синий</strong> - текущая тональность<br>
-            <strong>Голубой</strong> - аккорды из прогрессии (кликабельные)<br>
-            <strong>Внешний круг</strong> - мажорные тональности<br>
-            <strong>Внутренний круг</strong> - минорные тональности
-        `;
-        description.className = 'circle-description';
-        container.appendChild(description);
+        const modeTranslation = window.i18n ? window.i18n.t(`modes.${mode}`) : mode;
+        const keyTranslation = window.i18n ? window.i18n.t(`notes.${key}`) : key;
+        const titleText = window.i18n ? window.i18n.t('circle.title', { key: keyTranslation, mode: modeTranslation }) : `Квинтовый круг - ${key} ${mode}`;
+        title.textContent = titleText;
+        title.style.margin = '10px 0';
 
         const svgContainer = document.createElement('div');
-        svgContainer.innerHTML = this.renderCircle(currentKey, currentMode, chordProgression);
-        svgContainer.className = 'circle-svg-container';
-        container.appendChild(svgContainer);
+        svgContainer.innerHTML = this.renderCircle(key, mode, chords);
 
-        // Добавляем обработчики событий для интерактивных секторов
-        setTimeout(() => {
-            const interactiveSectors = container.querySelectorAll('.circle-sector.interactive');
-            interactiveSectors.forEach(sector => {
-                sector.addEventListener('click', async (e) => {
-                    const chordName = e.target.getAttribute('data-chord');
+        // Добавляем обработчики событий для кликов по аккордам
+        const svg = svgContainer.querySelector('svg');
+        if (svg) {
+            svg.addEventListener('click', async (e) => {
+                const target = e.target;
+                if (target.classList && (target.classList.contains('circle-sector') || target.classList.contains('interactive'))) {
+                    const chordName = target.getAttribute('data-chord');
                     if (chordName && typeof window.chordPlayer !== 'undefined') {
-                        // Получаем ноты аккорда и проигрываем его
+                        // Получаем ноты аккорда и проигрываем
                         const chordNotes = this.getChordNotes(chordName);
                         await window.chordPlayer.playChord(chordNotes);
-
-                        // Визуальная обратная связь
-                        const originalFill = e.target.getAttribute('fill');
-                        e.target.setAttribute('fill', '#28a745');
-                        setTimeout(() => {
-                            e.target.setAttribute('fill', originalFill);
-                        }, 200);
                     }
-                });
-
-                // Добавляем эффект наведения
-                sector.addEventListener('mouseenter', (e) => {
-                    const originalOpacity = e.target.getAttribute('opacity');
-                    e.target.setAttribute('data-original-opacity', originalOpacity);
-                    e.target.setAttribute('opacity', '0.8');
-                });
-
-                sector.addEventListener('mouseleave', (e) => {
-                    const originalOpacity = e.target.getAttribute('data-original-opacity');
-                    e.target.setAttribute('opacity', originalOpacity);
-                });
+                }
             });
-        }, 100);
+        }
+
+        container.appendChild(title);
+        container.appendChild(svgContainer);
 
         return container;
     }
@@ -301,7 +278,7 @@ class CircleOfFifths {
                     style="cursor: pointer" 
                     data-key="${minorKey}" data-mode="minor"/>`;
 
-            // Добавляем мажорную тональн��сть (внешний круг)
+            // Добавляем мажорную тональность (внешний круг)
             const majorAngle = this.angles[i];
             const majorX = centerX + ((outerRadius + middleRadius) / 2) * Math.cos(majorAngle);
             const majorY = centerY + ((outerRadius + middleRadius) / 2) * Math.sin(majorAngle);
@@ -328,12 +305,56 @@ class CircleOfFifths {
                 font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#495057">
                 ${currentKey}</text>`;
 
+        const modeText = window.i18n ? window.i18n.t(`circle.${currentMode}`) : (currentMode === 'major' ? 'мажор' : 'минор');
         svg += `<text x="${centerX}" y="${centerY + 8}" text-anchor="middle" dominant-baseline="middle" 
                 font-family="Arial, sans-serif" font-size="8" fill="#6c757d">
-                ${currentMode === 'major' ? 'мажор' : 'минор'}</text>`;
+                ${modeText}</text>`;
 
         svg += '</svg>';
         return svg;
+    }
+
+    // Обновить переводы в уже созданном круге
+    updateCircleTranslations(container, key, mode) {
+        if (!window.i18n || !container) return;
+
+        // Обновляем заголовок контейнера
+        const title = container.querySelector('h4');
+        if (title) {
+            const modeTranslation = window.i18n.t(`modes.${mode}`);
+            const keyTranslation = window.i18n.t(`notes.${key}`);
+            const titleText = window.i18n.t('circle.title', { key: keyTranslation, mode: modeTranslation });
+            title.textContent = titleText;
+        }
+
+        // Пересоздаем SVG с новыми переводами
+        const svgContainer = container.querySelector('div');
+        if (svgContainer) {
+            // Получаем текущие аккорды из data-атрибутов или пересоздаем
+            const chords = this.getCurrentChords(container);
+            svgContainer.innerHTML = this.renderCircle(key, mode, chords);
+
+            // Восстанавливаем обработчики событий
+            const svg = svgContainer.querySelector('svg');
+            if (svg) {
+                svg.addEventListener('click', async (e) => {
+                    const target = e.target;
+                    if (target.classList && (target.classList.contains('circle-sector') || target.classList.contains('interactive'))) {
+                        const chordName = target.getAttribute('data-chord');
+                        if (chordName && typeof window.chordPlayer !== 'undefined') {
+                            const chordNotes = this.getChordNotes(chordName);
+                            await window.chordPlayer.playChord(chordNotes);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    // Получить текущие аккорды из контейнера (вспомогательная функция)
+    getCurrentChords(container) {
+        // Попытаемся извлечь информацию об аккордах из data-атрибутов или восстановить пустой массив
+        return container._chords || [];
     }
 
     // Получить аккорды для тональности и лада
@@ -362,43 +383,32 @@ class CircleOfFifths {
         const container = document.createElement('div');
         container.className = 'interactive-circle-container';
 
-        const title = document.createElement('div');
-        title.textContent = 'Выбор тональности';
-        title.className = 'interactive-circle-title';
-        container.appendChild(title);
+        const title = document.createElement('h4');
+        const titleText = window.i18n ? window.i18n.t('circle.clickToChange') : 'Кликните на тональность для изменения';
+        title.textContent = titleText;
+        title.style.margin = '10px 0';
 
+        // Создаем контейнер для SVG и вставляем HTML-строку
         const svgContainer = document.createElement('div');
         svgContainer.innerHTML = this.renderInteractiveCircle(currentKey, currentMode, onTonalityChange);
-        svgContainer.className = 'interactive-circle-svg';
-        container.appendChild(svgContainer);
 
-        // Добавля���� обработчики событий
-        setTimeout(() => {
-            const selectors = container.querySelectorAll('.tonality-selector');
-            selectors.forEach(selector => {
-                selector.addEventListener('click', (e) => {
-                    const key = e.target.getAttribute('data-key');
-                    const mode = e.target.getAttribute('data-mode');
+        // Добавляем обработчики событий для интерактивности
+        const svg = svgContainer.querySelector('svg');
+        if (svg) {
+            svg.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.classList.contains('tonality-selector')) {
+                    const key = target.getAttribute('data-key');
+                    const mode = target.getAttribute('data-mode');
                     if (key && mode && onTonalityChange) {
                         onTonalityChange(key, mode);
                     }
-                });
-
-                // Эффекты наведения
-                selector.addEventListener('mouseenter', (e) => {
-                    const currentFill = e.target.getAttribute('fill');
-                    e.target.setAttribute('data-original-fill', currentFill);
-                    if (currentFill !== '#667eea') { // Не меняем цвет текущей тональности
-                        e.target.setAttribute('fill', '#d4edda');
-                    }
-                });
-
-                selector.addEventListener('mouseleave', (e) => {
-                    const originalFill = e.target.getAttribute('data-original-fill');
-                    e.target.setAttribute('fill', originalFill);
-                });
+                }
             });
-        }, 100);
+        }
+
+        container.appendChild(title);
+        container.appendChild(svgContainer);
 
         return container;
     }

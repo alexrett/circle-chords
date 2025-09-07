@@ -1,4 +1,26 @@
 // guitar/fretboard.js
+
+// Функция для перевода названий позиций аккордов
+function translateChordPositionName(originalName) {
+    if (!window.i18n) return originalName;
+
+    // Проверяем на точное совпадение
+    const exactTranslation = window.i18n.t(`guitar.chordPositions.${originalName}`);
+    if (exactTranslation !== `guitar.chordPositions.${originalName}`) {
+        return exactTranslation;
+    }
+
+    // Проверяем паттерны с номерами ладов
+    const barreMatch = originalName.match(/^Барре (\d+) лад$/);
+    if (barreMatch) {
+        const fretNumber = barreMatch[1];
+        return window.i18n.t('guitar.chordPositions.Барре {fret} лад', { fret: fretNumber });
+    }
+
+    // Возвращаем оригинальное название, если перевод не найден
+    return originalName;
+}
+
 function renderChordDiagram(chordName) {
     const chordVariations = typeof GUITAR_CHORDS !== 'undefined' ? GUITAR_CHORDS[chordName] : null;
     if (!chordVariations) return null;
@@ -9,8 +31,9 @@ function renderChordDiagram(chordName) {
     // Добавляем кнопку воспроизведения для всего аккорда
     const playButton = document.createElement('button');
     playButton.className = 'play-chord-btn';
-    playButton.innerHTML = '🔊 ' + chordName;
-    playButton.title = `Проиграть аккорд ${chordName}`;
+    const playText = window.i18n ? window.i18n.t('progressions.playChord') : '🔊';
+    playButton.innerHTML = `${playText} ${chordName}`;
+    playButton.title = `${window.i18n ? window.i18n.t('progressions.playChord') : 'Проиграть аккорд'} ${chordName}`;
     playButton.addEventListener('click', async () => {
         if (typeof window.chordPlayer !== 'undefined') {
             // Получаем ноты аккорда
@@ -24,10 +47,11 @@ function renderChordDiagram(chordName) {
         const variationContainer = document.createElement('div');
         variationContainer.className = 'chord-variation';
 
-        // Название варианта
+        // Название варианта с переводом
         const variationTitle = document.createElement('div');
         variationTitle.className = 'variation-title';
-        variationTitle.textContent = variation.name;
+        const translatedName = translateChordPositionName(variation.name);
+        variationTitle.textContent = translatedName;
         variationContainer.appendChild(variationTitle);
 
         // Диаграмма аккорда
@@ -47,7 +71,8 @@ function renderChordDiagram(chordName) {
         if (startFret > 0) {
             const fretLabel = document.createElement('div');
             fretLabel.className = 'fret-position-label';
-            fretLabel.textContent = `${startFret} лад`;
+            const fretText = window.i18n ? window.i18n.t('guitar.fretPosition', { fret: startFret }) : `${startFret} лад`;
+            fretLabel.textContent = fretText;
             variationContainer.appendChild(fretLabel);
         }
 

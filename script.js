@@ -9,16 +9,32 @@ class ChordProgressionGenerator {
         this.visualizationDiv = document.getElementById('visualization');
         this.bassNotesDiv = document.getElementById('bass-notes');
         this.interactiveCircleContainer = document.getElementById('interactive-circle-container');
+        this.languageSelect = document.getElementById('language-select');
         this.circleOfFifths = new CircleOfFifths();
         this.init();
     }
 
-    init() {
+    async init() {
+        // Ждем инициализацию i18n
+        if (window.i18n) {
+            await window.i18n.init();
+        }
+
         this.generateBtn.addEventListener('click', () => this.generate());
 
         // Слушаем изменения селекторов
         this.keySelect.addEventListener('change', () => this.updateAll());
         this.modeSelect.addEventListener('change', () => this.updateAll());
+
+        // Слушаем изменение языка
+        this.languageSelect.addEventListener('change', (e) => {
+            if (window.i18n) {
+                window.i18n.setLanguage(e.target.value);
+            }
+        });
+
+        // Сохраняем ссылку для доступа из i18n
+        window.chordApp = this;
 
         // Инициализируем интерактивный круг
         this.updateInteractiveCircle();
@@ -67,18 +83,37 @@ class ChordProgressionGenerator {
         this.progressionsDiv.innerHTML = '';
         this.visualizationDiv.innerHTML = '';
         this.bassNotesDiv.innerHTML = '';
-        // Удаляем очистку и глобальный вывод
+
         progressions.forEach((progression, index) => {
             // Карточка прогрессии
             const card = document.createElement('div');
             card.className = 'progression-card';
             const title = document.createElement('h3');
             title.className = 'progression-title';
-            title.textContent = `${progression.name} в тональности ${key} ${mode === 'major' ? 'мажор' : mode === 'minor' ? 'минор' : mode}`;
+
+            // Используем интернационализацию для заголовка
+            const modeTranslation = window.i18n ? window.i18n.t(`modes.${mode}`) : mode;
+            const keyTranslation = window.i18n ? window.i18n.t(`notes.${key}`) : key;
+            const inKeyText = window.i18n ? window.i18n.t('progressions.inKey', { key: keyTranslation, mode: modeTranslation }) : `в тональности ${key} ${mode}`;
+
+            // Переводим название прогрессии
+            const progressionName = window.i18n ?
+                (window.i18n.t(`progressions.names.${progression.name}`) !== `progressions.names.${progression.name}` ?
+                    window.i18n.t(`progressions.names.${progression.name}`) : progression.name) :
+                progression.name;
+
+            title.textContent = `${progressionName} ${inKeyText}`;
+
             const description = document.createElement('p');
-            description.textContent = progression.description;
+            // Переводим описание прогрессии
+            const progressionDescription = window.i18n ?
+                (window.i18n.t(`progressions.descriptions.${progression.description}`) !== `progressions.descriptions.${progression.description}` ?
+                    window.i18n.t(`progressions.descriptions.${progression.description}`) : progression.description) :
+                progression.description;
+            description.textContent = progressionDescription;
             description.style.marginBottom = '15px';
             description.style.color = '#6c757d';
+
             // Новый список аккордов с табами
             const chordsList = document.createElement('div');
             chordsList.className = 'chords-list';
@@ -107,7 +142,7 @@ class ChordProgressionGenerator {
             // Добавляем кнопку воспроизведения всей последовательности
             const playProgressionBtn = document.createElement('button');
             playProgressionBtn.className = 'play-progression-btn';
-            playProgressionBtn.innerHTML = '▶️ Проиграть последовательность';
+            playProgressionBtn.innerHTML = window.i18n ? window.i18n.t('progressions.playProgression') : '▶️ Проиграть последовательность';
             playProgressionBtn.addEventListener('click', async () => {
                 if (typeof window.chordPlayer !== 'undefined') {
                     await window.chordPlayer.playProgression(progression.chords);
@@ -118,7 +153,7 @@ class ChordProgressionGenerator {
             // Добавляем кнопку полной аранжировки
             const playFullBtn = document.createElement('button');
             playFullBtn.className = 'play-full-btn';
-            playFullBtn.innerHTML = '🎵 Проиграть с басом и вокалом';
+            playFullBtn.innerHTML = window.i18n ? window.i18n.t('progressions.playFull') : '🎵 Проиграть с басом и вокалом';
             playFullBtn.addEventListener('click', async () => {
                 if (typeof window.chordPlayer !== 'undefined') {
                     const bassNotes = getBassNotes(progression.chords).map(b => b.bassNote);
@@ -137,19 +172,48 @@ class ChordProgressionGenerator {
                     progression.chords,
                     progression.name
                 );
+
+                // Сохраняем информацию для обновления переводов
+                circleContainer._chords = progression.chords;
+                circleContainer._key = key;
+                circleContainer._mode = mode;
+                circleContainer._circleOfFifths = circleOfFifths;
+
                 card.appendChild(circleContainer);
             }
 
             // Басовые ноты и гриф внутри карточки
             const bassNotes = getBassNotes(progression.chords);
             const bassRootNotes = bassNotes.map(b => b.bassNote);
-            card.appendChild(renderBassFretboard(bassRootNotes, 'Басовые ноты на грифе (4 струны)'));
-            card.appendChild(renderNoteList(bassRootNotes, 'Басовые ноты'));
+            const bassTitle = window.i18n ? window.i18n.t('progressions.bassNotesOnFretboard') : 'Басовые ноты на грифе (4 струны)';
+            const bassListTitle = window.i18n ? window.i18n.t('progressions.bassNotes') : 'Басовые ноты';
+
+            card.appendChild(renderBassFretboard(bassRootNotes, bassTitle));
+            card.appendChild(renderNoteList(bassRootNotes, bassListTitle));
+
             // Вокальные ноты и гриф внутри карточки
             const scaleNotes = getScale(key, mode);
-            card.appendChild(renderVocalFretboard(scaleNotes, 'Вокальные ноты на грифе (6 струн)'));
-            card.appendChild(renderNoteList(scaleNotes, 'Вокальные ноты'));
+            const vocalTitle = window.i18n ? window.i18n.t('progressions.vocalNotesOnFretboard') : 'Вокальные ноты на грифе (6 струн)';
+            const vocalListTitle = window.i18n ? window.i18n.t('progressions.vocalNotes') : 'Вокальные ноты';
+
+            card.appendChild(renderVocalFretboard(scaleNotes, vocalTitle));
+            card.appendChild(renderNoteList(scaleNotes, vocalListTitle));
+
             this.progressionsDiv.appendChild(card);
+        });
+    }
+
+    // Обновить переводы во всех квинтовых кругах
+    updateCircleTranslations() {
+        const circleContainers = document.querySelectorAll('.circle-container');
+        circleContainers.forEach(container => {
+            if (container._circleOfFifths && container._key && container._mode && container._chords) {
+                container._circleOfFifths.updateCircleTranslations(
+                    container,
+                    container._key,
+                    container._mode
+                );
+            }
         });
     }
 }

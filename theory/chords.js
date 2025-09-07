@@ -17,14 +17,22 @@ function buildChord(root, chordType) {
 }
 
 function getChordName(root, chordType) {
+    // Получаем суффикс для аккорда с проверкой на существование перевода
+    let suffix = '';
+    if (window.i18n) {
+        const translatedSuffix = window.i18n.t(`chordTypes.${chordType}`);
+        // Проверяем, что перевод найден (не равен исходному ключу)
+        suffix = translatedSuffix !== `chordTypes.${chordType}` ? translatedSuffix : '';
+    }
+
     switch(chordType) {
-        case 'major': return root;
-        case 'minor': return root + 'm';
-        case 'dim': return root + 'dim';
-        case 'maj7': return root + 'maj7';
-        case 'min7': return root + 'm7';
-        case 'dom7': return root + '7';
-        default: return root;
+        case 'major': return root + suffix;
+        case 'minor': return root + (suffix || 'm');
+        case 'dim': return root + (suffix || 'dim');
+        case 'maj7': return root + (suffix || 'maj7');
+        case 'min7': return root + (suffix || 'm7');
+        case 'dom7': return root + (suffix || '7');
+        default: return root + suffix;
     }
 }
 

@@ -3,48 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор аккордовых последовательностей для гитары</title>
+    <title data-i18n="app.title">Генератор аккордовых последовательностей для гитары</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎸 Генератор аккордовых последовательностей</h1>
+            <h1 data-i18n="app.header">🎸 Генератор аккордовых последовательностей</h1>
         </header>
 
         <div class="controls">
             <div class="control-group">
-                <label for="key-select">Тональность:</label>
-                <select id="key-select">
-                    <option value="C">C (До)</option>
-                    <option value="C#">C# (До#)</option>
-                    <option value="D">D (Ре)</option>
-                    <option value="D#">D# (Ре#)</option>
-                    <option value="E">E (Ми)</option>
-                    <option value="F">F (Фа)</option>
-                    <option value="F#">F# (Фа#)</option>
-                    <option value="G">G (Соль)</option>
-                    <option value="G#">G# (Соль#)</option>
-                    <option value="A">A (Ля)</option>
-                    <option value="A#">A# (Ля#)</option>
-                    <option value="B">B (Си)</option>
+                <label for="language-select" data-i18n="controls.language">Язык:</label>
+                <select id="language-select">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
                 </select>
             </div>
 
             <div class="control-group">
-                <label for="mode-select">Лад:</label>
+                <label for="key-select" data-i18n="controls.key">Тональность:</label>
+                <select id="key-select">
+                    <option value="C">C (<span data-i18n="notes.C">До</span>)</option>
+                    <option value="C#">C# (<span data-i18n="notes.C#">До#</span>)</option>
+                    <option value="D">D (<span data-i18n="notes.D">Ре</span>)</option>
+                    <option value="D#">D# (<span data-i18n="notes.D#">Ре#</span>)</option>
+                    <option value="E">E (<span data-i18n="notes.E">Ми</span>)</option>
+                    <option value="F">F (<span data-i18n="notes.F">Фа</span>)</option>
+                    <option value="F#">F# (<span data-i18n="notes.F#">Фа#</span>)</option>
+                    <option value="G">G (<span data-i18n="notes.G">Соль</span>)</option>
+                    <option value="G#">G# (<span data-i18n="notes.G#">Соль#</span>)</option>
+                    <option value="A">A (<span data-i18n="notes.A">Ля</span>)</option>
+                    <option value="A#">A# (<span data-i18n="notes.A#">Ля#</span>)</option>
+                    <option value="B">B (<span data-i18n="notes.B">Си</span>)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="mode-select" data-i18n="controls.mode">Лад:</label>
                 <select id="mode-select">
-                    <option value="major">Мажор</option>
-                    <option value="minor">Минор</option>
-                    <option value="dorian">Дорийский</option>
-                    <option value="mixolydian">Миксолидийский</option>
-                    <option value="lydian">Лидийский</option>
+                    <option value="major" data-i18n="modes.major">Мажор</option>
+                    <option value="minor" data-i18n="modes.minor">Минор</option>
+                    <option value="dorian" data-i18n="modes.dorian">Дорийский</option>
+                    <option value="mixolydian" data-i18n="modes.mixolydian">Миксолидийский</option>
+                    <option value="lydian" data-i18n="modes.lydian">Лидийский</option>
                 </select>
             </div>
 
             <div id="interactive-circle-container"></div>
 
-            <button id="generate-btn">Сгенерировать</button>
+            <button id="generate-btn" data-i18n="controls.generate">Сгенерировать</button>
         </div>
 
         <div class="results">
@@ -58,7 +66,9 @@
         </div>
     </div>
 
-    <script src="audio/Tone.js"></script>
+    <!-- Подключение модулей -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
+    <script src="i18n/translations.js"></script>
     <script src="config/configLoader.js"></script>
     <script src="theory/scales.js"></script>
     <script src="theory/chords.js"></script>
