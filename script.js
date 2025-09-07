@@ -24,6 +24,7 @@ class ChordProgressionGenerator {
         this.progressionsDiv.innerHTML = '';
         this.visualizationDiv.innerHTML = '';
         this.bassNotesDiv.innerHTML = '';
+        // Удаляем очистку и глобальный вывод
         progressions.forEach((progression, index) => {
             // Карточка прогрессии
             const card = document.createElement('div');
@@ -59,49 +60,15 @@ class ChordProgressionGenerator {
             card.appendChild(title);
             card.appendChild(description);
             card.appendChild(chordsList);
-            // Басовые ноты под прогрессией
-            const bassSection = document.createElement('div');
-            bassSection.className = 'bass-section';
-            const bassTitle = document.createElement('h4');
-            bassTitle.className = 'bass-title';
-            bassTitle.textContent = `Басовые ноты для этой последовательности:`;
-            const bassNotesList = document.createElement('div');
-            bassNotesList.className = 'bass-notes-list';
+            // Басовые ноты и гриф внутри карточки
             const bassNotes = getBassNotes(progression.chords);
-            bassNotes.forEach(bass => {
-                const bassNote = document.createElement('div');
-                bassNote.className = 'bass-note';
-                bassNote.textContent = `${bass.chord}: ${typeof NOTE_NAMES_RU !== 'undefined' ? NOTE_NAMES_RU[bass.bassNote] : bass.bassNote}`;
-                bassNotesList.appendChild(bassNote);
-            });
-            bassSection.appendChild(bassTitle);
-            bassSection.appendChild(bassNotesList);
-            card.appendChild(bassSection);
-            // Визуализация басовых нот на грифе
             const bassRootNotes = bassNotes.map(b => b.bassNote);
-            const bassFretboard = renderFretboard(bassRootNotes, 'Басовые ноты на грифе');
-            card.appendChild(bassFretboard);
-            // Вокальные ноты
-            const vocalSection = document.createElement('div');
-            vocalSection.className = 'bass-section';
-            const vocalTitle = document.createElement('h4');
-            vocalTitle.className = 'bass-title';
-            vocalTitle.textContent = `Возможные вокальные ноты:`;
-            const vocalNotesList = document.createElement('div');
-            vocalNotesList.className = 'bass-notes-list';
+            card.appendChild(renderBassFretboard(bassRootNotes, 'Басовые ноты на грифе (4 струны)'));
+            card.appendChild(renderNoteList(bassRootNotes, 'Басовые ноты'));
+            // Вокальные ноты и гриф внутри карточки
             const scaleNotes = getScale(key, mode);
-            scaleNotes.forEach(note => {
-                const noteDiv = document.createElement('div');
-                noteDiv.className = 'bass-note';
-                noteDiv.textContent = NOTE_NAMES_RU[note] || note;
-                vocalNotesList.appendChild(noteDiv);
-            });
-            vocalSection.appendChild(vocalTitle);
-            vocalSection.appendChild(vocalNotesList);
-            card.appendChild(vocalSection);
-            // Визуализация вокальных нот на грифе
-            const vocalFretboard = renderFretboard(scaleNotes, 'Вокальные ноты на грифе');
-            card.appendChild(vocalFretboard);
+            card.appendChild(renderVocalFretboard(scaleNotes, 'Вокальные ноты на грифе (6 струн)'));
+            card.appendChild(renderNoteList(scaleNotes, 'Вокальные ноты'));
             this.progressionsDiv.appendChild(card);
         });
     }

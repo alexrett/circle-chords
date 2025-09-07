@@ -74,3 +74,114 @@ function renderFretboard(notesToShow, title = '') {
     }
     return fretboard;
 }
+
+// Получить ноту на струне и ладу
+function getNoteOnString(openNote, fret) {
+    const NOTES = typeof window.NOTES !== 'undefined' ? window.NOTES : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const openIndex = NOTES.indexOf(openNote);
+    return NOTES[(openIndex + fret) % 12];
+}
+
+// Визуализация грифа бас-гитары (4 струны)
+function renderBassFretboard(notesToShow, title = '') {
+    const openStrings = ['E', 'A', 'D', 'G'];
+    const numFrets = 12;
+    const fretboard = document.createElement('div');
+    fretboard.className = 'fretboard bass';
+    if (title) {
+        const t = document.createElement('div');
+        t.textContent = title;
+        t.style.fontWeight = 'bold';
+        t.style.marginBottom = '5px';
+        fretboard.appendChild(t);
+    }
+    const header = document.createElement('div');
+    header.className = 'fretboard-row';
+    header.appendChild(document.createElement('div'));
+    for (let fret = 0; fret <= numFrets; fret++) {
+        const cell = document.createElement('div');
+        cell.className = 'fretboard-fret-label';
+        cell.textContent = fret;
+        header.appendChild(cell);
+    }
+    fretboard.appendChild(header);
+    openStrings.forEach(openNote => {
+        const row = document.createElement('div');
+        row.className = 'fretboard-row';
+        const stringLabel = document.createElement('div');
+        stringLabel.className = 'fretboard-string-label';
+        stringLabel.textContent = openNote;
+        row.appendChild(stringLabel);
+        for (let fret = 0; fret <= numFrets; fret++) {
+            const cell = document.createElement('div');
+            cell.className = 'fretboard-cell'; // исправлено с fretboard-fret
+            const note = getNoteOnString(openNote, fret);
+            if (notesToShow.includes(note)) {
+                cell.classList.add('fretboard-highlight'); // исправлено с highlight
+            }
+            cell.textContent = note;
+            row.appendChild(cell);
+        }
+        fretboard.appendChild(row);
+    });
+    return fretboard;
+}
+
+// Визуализация вокальных нот на 6-струнном грифе
+function renderVocalFretboard(notesToShow, title = '') {
+    const openStrings = ['E', 'A', 'D', 'G', 'B', 'E'];
+    const numFrets = 12;
+    const fretboard = document.createElement('div');
+    fretboard.className = 'fretboard vocal';
+    if (title) {
+        const t = document.createElement('div');
+        t.textContent = title;
+        t.style.fontWeight = 'bold';
+        t.style.marginBottom = '5px';
+        fretboard.appendChild(t);
+    }
+    const header = document.createElement('div');
+    header.className = 'fretboard-row';
+    header.appendChild(document.createElement('div'));
+    for (let fret = 0; fret <= numFrets; fret++) {
+        const cell = document.createElement('div');
+        cell.className = 'fretboard-fret-label';
+        cell.textContent = fret;
+        header.appendChild(cell);
+    }
+    fretboard.appendChild(header);
+    openStrings.forEach(openNote => {
+        const row = document.createElement('div');
+        row.className = 'fretboard-row';
+        const stringLabel = document.createElement('div');
+        stringLabel.className = 'fretboard-string-label';
+        stringLabel.textContent = openNote;
+        row.appendChild(stringLabel);
+        for (let fret = 0; fret <= numFrets; fret++) {
+            const cell = document.createElement('div');
+            cell.className = 'fretboard-cell'; // исправлено с fretboard-fret
+            const note = getNoteOnString(openNote, fret);
+            if (notesToShow.includes(note)) {
+                cell.classList.add('fretboard-highlight'); // исправлено с highlight
+            }
+            cell.textContent = note;
+            row.appendChild(cell);
+        }
+        fretboard.appendChild(row);
+    });
+    return fretboard;
+}
+
+// Перечень нот
+function renderNoteList(notes, title = '') {
+    const div = document.createElement('div');
+    div.className = 'note-list';
+    if (title) {
+        const t = document.createElement('span');
+        t.textContent = title + ': ';
+        t.style.fontWeight = 'bold';
+        div.appendChild(t);
+    }
+    div.appendChild(document.createTextNode(notes.join(', ')));
+    return div;
+}
