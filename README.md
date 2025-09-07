@@ -11,7 +11,7 @@ This is a web application for generating chord progressions with visualization o
 ## Application Architecture
 
 ```
-awesomeProject1/
+/
 ├── index.html              # Main HTML file
 ├── script.js               # Main application class
 ├── styles.css              # UI styles
