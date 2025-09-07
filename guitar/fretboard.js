@@ -1,27 +1,67 @@
 // guitar/fretboard.js
 function renderChordDiagram(chordName) {
-    const chordData = typeof GUITAR_CHORDS !== 'undefined' ? GUITAR_CHORDS[chordName] : null;
-    if (!chordData) return null;
-    const diagram = document.createElement('div');
-    diagram.className = 'chord-diagram';
-    for (let fret = 0; fret < 5; fret++) {
-        for (let string = 0; string < 6; string++) {
-            const cell = document.createElement('div');
-            cell.className = 'fret';
-            const fretNumber = chordData.frets[string];
-            const finger = chordData.fingers[string];
-            if (fretNumber === fret && finger > 0) {
-                cell.classList.add('finger');
-                cell.textContent = finger;
-            } else if (fretNumber === null && fret === 0) {
-                cell.textContent = 'X';
-            } else if (fretNumber === 0 && fret === 0) {
-                cell.textContent = 'O';
-            }
-            diagram.appendChild(cell);
+    const chordVariations = typeof GUITAR_CHORDS !== 'undefined' ? GUITAR_CHORDS[chordName] : null;
+    if (!chordVariations) return null;
+
+    const container = document.createElement('div');
+    container.className = 'chord-variations-container';
+
+    chordVariations.forEach((variation, index) => {
+        const variationContainer = document.createElement('div');
+        variationContainer.className = 'chord-variation';
+
+        // Название варианта
+        const variationTitle = document.createElement('div');
+        variationTitle.className = 'variation-title';
+        variationTitle.textContent = variation.name;
+        variationContainer.appendChild(variationTitle);
+
+        // Диаграмма аккорда
+        const diagram = document.createElement('div');
+        diagram.className = 'chord-diagram';
+
+        // Найдем минимальный и максимальный лады для этого аккорда
+        const fretsUsed = variation.frets.filter(f => f !== null && f > 0);
+        const minFret = fretsUsed.length > 0 ? Math.min(...fretsUsed) : 0;
+        const maxFret = fretsUsed.length > 0 ? Math.max(...fretsUsed) : 4;
+
+        // Если все лады больше 0, показываем от минимального лада
+        const startFret = minFret > 0 ? minFret : 0;
+        const endFret = Math.max(startFret + 4, maxFret);
+
+        // Добавляем номер лада если это не открытая позиция
+        if (startFret > 0) {
+            const fretLabel = document.createElement('div');
+            fretLabel.className = 'fret-position-label';
+            fretLabel.textContent = `${startFret} лад`;
+            variationContainer.appendChild(fretLabel);
         }
-    }
-    return diagram;
+
+        // Рисуем диаграмму
+        for (let fret = startFret; fret <= endFret; fret++) {
+            for (let string = 0; string < 6; string++) {
+                const cell = document.createElement('div');
+                cell.className = 'fret';
+                const fretNumber = variation.frets[string];
+                const finger = variation.fingers[string];
+
+                if (fretNumber === fret && finger > 0) {
+                    cell.classList.add('finger');
+                    cell.textContent = finger;
+                } else if (fretNumber === null && fret === startFret) {
+                    cell.textContent = 'X';
+                } else if (fretNumber === 0 && fret === startFret) {
+                    cell.textContent = 'O';
+                }
+                diagram.appendChild(cell);
+            }
+        }
+
+        variationContainer.appendChild(diagram);
+        container.appendChild(variationContainer);
+    });
+
+    return container;
 }
 
 // Визуализация грифа с подсветкой выбранных нот
