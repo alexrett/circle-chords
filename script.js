@@ -62,6 +62,7 @@ class ChordProgressionGenerator {
         const progressions = generateProgressions(key, mode);
         this.renderProgressions(progressions, key, mode);
     }
+
     renderProgressions(progressions, key, mode) {
         this.progressionsDiv.innerHTML = '';
         this.visualizationDiv.innerHTML = '';
@@ -152,7 +153,28 @@ class ChordProgressionGenerator {
         });
     }
 }
-// Инициализация приложения
-window.addEventListener('DOMContentLoaded', () => {
-    new ChordProgressionGenerator();
-});
+
+// Инициализация приложения с загрузкой конфигурации
+async function initializeApp() {
+    try {
+        // Загружаем конфигурацию
+        const config = await window.configLoader.loadAll();
+
+        // Инициализируем все модули с загруженной конфигурацией
+        initializeScales(config);
+        initializeChords(config);
+        initializeProgressions(config);
+        initializeCircleOfFifths(config);
+
+        // Создаем и запускаем приложение
+        const app = new ChordProgressionGenerator();
+
+        console.log('Приложение успешно инициализировано с конфигурацией из JSON файлов');
+    } catch (error) {
+        console.error('Ошибка инициализации приложения:', error);
+        alert('Ошибка загрузки конфигурации. Проверьте консоль для подробностей.');
+    }
+}
+
+// Запускаем приложение после загрузки DOM
+window.addEventListener('DOMContentLoaded', initializeApp);

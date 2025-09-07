@@ -1,17 +1,11 @@
 // theory/circleOfFifths.js
+// Переменные для хранения загруженной конфигурации
+let majorKeys = [];
+let minorKeys = [];
+let relativeMinor = {};
 
 class CircleOfFifths {
     constructor() {
-        // Порядок тональностей в квинтовом круге (по часовой стрелке)
-        this.majorKeys = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
-        this.minorKeys = ['Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m', 'Fm', 'Cm', 'Gm', 'Dm'];
-
-        // Соответствие мажорных и минорных тональностей
-        this.relativeMinor = {
-            'C': 'Am', 'G': 'Em', 'D': 'Bm', 'A': 'F#m', 'E': 'C#m', 'B': 'G#m',
-            'F#': 'D#m', 'C#': 'A#m', 'G#': 'Fm', 'D#': 'Cm', 'A#': 'Gm', 'F': 'Dm'
-        };
-
         // Углы для каждой позиции (12 позиций по 30 градусов)
         this.angles = [];
         for (let i = 0; i < 12; i++) {
@@ -22,10 +16,10 @@ class CircleOfFifths {
     // Получить позицию тональности в круге (0-11)
     getKeyPosition(key, mode) {
         if (mode === 'major') {
-            return this.majorKeys.indexOf(key);
+            return majorKeys.indexOf(key);
         } else {
             const minorKey = key + 'm';
-            return this.minorKeys.indexOf(minorKey);
+            return minorKeys.indexOf(minorKey);
         }
     }
 
@@ -60,8 +54,8 @@ class CircleOfFifths {
             const angle1 = this.angles[i] - Math.PI / 12; // -15 градусов
             const angle2 = this.angles[i] + Math.PI / 12; // +15 градусов
 
-            const majorKey = this.majorKeys[i];
-            const minorKey = this.minorKeys[i].replace('m', '');
+            const majorKey = majorKeys[i];
+            const minorKey = minorKeys[i].replace('m', '');
 
             // ВНЕШНЕЕ КОЛЬЦО (мажорные тональности)
             const majorX1 = centerX + outerRadius * Math.cos(angle1);
@@ -107,7 +101,7 @@ class CircleOfFifths {
             const minorX4 = centerX + innerRadius * Math.cos(angle1);
             const minorY4 = centerY + innerRadius * Math.sin(angle1);
 
-            // Определяем, является ли минорный аккорд частью прогрессии
+            // Определяе��, является ли мино��ный аккорд частью прогре��сии
             const isMinorInProgression = minorChordsInProgression.includes(minorKey);
             const isMinorCurrentKey = (currentMode === 'minor' && minorKey === currentKey);
 
@@ -152,7 +146,7 @@ class CircleOfFifths {
             svg += `<text x="${minorX}" y="${minorY}" text-anchor="middle" dominant-baseline="middle" 
                     font-family="Arial, sans-serif" font-size="10" 
                     fill="${minorTextColor}" opacity="${minorTextOpacity}" style="pointer-events: none;">
-                    ${this.minorKeys[i]}</text>`;
+                    ${minorKeys[i]}</text>`;
         }
 
         // Центральная надпись
@@ -252,8 +246,8 @@ class CircleOfFifths {
             const angle1 = this.angles[i] - Math.PI / 12;
             const angle2 = this.angles[i] + Math.PI / 12;
 
-            const majorKey = this.majorKeys[i];
-            const minorKey = this.minorKeys[i].replace('m', '');
+            const majorKey = majorKeys[i];
+            const minorKey = minorKeys[i].replace('m', '');
 
             // ВНЕШНЕЕ КОЛЬЦО (мажорные тональности)
             const majorX1 = centerX + outerRadius * Math.cos(angle1);
@@ -307,7 +301,7 @@ class CircleOfFifths {
                     style="cursor: pointer" 
                     data-key="${minorKey}" data-mode="minor"/>`;
 
-            // Добавляем мажорную тональность (внешний круг)
+            // Добавляем мажорную тональн��сть (внешний круг)
             const majorAngle = this.angles[i];
             const majorX = centerX + ((outerRadius + middleRadius) / 2) * Math.cos(majorAngle);
             const majorY = centerY + ((outerRadius + middleRadius) / 2) * Math.sin(majorAngle);
@@ -326,7 +320,7 @@ class CircleOfFifths {
             svg += `<text x="${minorX}" y="${minorY}" text-anchor="middle" dominant-baseline="middle" 
                     font-family="Arial, sans-serif" font-size="8" 
                     fill="${minorTextColor}" style="pointer-events: none;">
-                    ${this.minorKeys[i]}</text>`;
+                    ${minorKeys[i]}</text>`;
         }
 
         // Центральная надпись
@@ -378,7 +372,7 @@ class CircleOfFifths {
         svgContainer.className = 'interactive-circle-svg';
         container.appendChild(svgContainer);
 
-        // Добавляем обработчики событий
+        // Добавля���� обработчики событий
         setTimeout(() => {
             const selectors = container.querySelectorAll('.tonality-selector');
             selectors.forEach(selector => {
@@ -420,6 +414,13 @@ class CircleOfFifths {
             return buildChord(root, 'major');
         }
     }
+}
+
+// Функция для инициализации данных из конфигурации
+function initializeCircleOfFifths(config) {
+    majorKeys = config.majorKeys;
+    minorKeys = config.minorKeys;
+    relativeMinor = config.relativeMinor;
 }
 
 // Экспортируем для использования
