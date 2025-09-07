@@ -1,51 +1,52 @@
 # Guitar Progression Generator
 
-Рабочая версия для использования тут: https://circle-chords.malikov.tech/
+[RU](./README.ru.md) readme.
 
-## Обзор системы
+Working version available here: https://circle-chords.malikov.tech/
 
-Это веб-приложение для генерации аккордовых последовательностей с визуализацией на грифе гитары, квинтовом круге и аудио воспроизведением. Архитектура построена по модульному принципу с разделением на теорию музыки, визуализацию и аудио.
+## System Overview
 
-## Архитектура приложения
+This is a web application for generating chord progressions with visualization on the guitar fretboard, the circle of fifths, and audio playback. The architecture follows a modular principle, separating music theory, visualization, and audio.
+
+## Application Architecture
 
 ```
 awesomeProject1/
-├── index.html              # Основной HTML файл
-├── script.js               # Главный класс приложения
-├── styles.css              # Стили интерфейса
-├── config/                 # Конфигурационные данные
-│   ├── scales.json         # Лады и ноты
-│   ├── chords.json         # Аккорды и аппликатуры
-│   ├── progressions.json   # Прогрессии аккордов
-│   ├── circleOfFifths.json # Данные квинтового круга
-│   └── configLoader.js     # Загрузчик конфигураций (пустой)
-├── theory/                 # Модули теории музыки
-│   ├── scales.js           # Работа с ладами
-│   ├── chords.js           # Построение аккордов
-│   ├── progressions.js     # Генерация последовательностей
-│   └── circleOfFifths.js   # Квинтовый круг
-├── guitar/                 # Модули для работы с гитарой
-│   └── fretboard.js        # Визуализация грифа
-└── audio/                  # Аудио модули
-    ├── chordPlayer.js      # Воспроизведение аккордов
-    └── Tone.js             # Библиотека для аудио
+├── index.html              # Main HTML file
+├── script.js               # Main application class
+├── styles.css              # UI styles
+├── config/                 # Configuration data
+│   ├── scales.json         # Scales and notes
+│   ├── chords.json         # Chords and fingerings
+│   ├── progressions.json   # Chord progressions
+│   ├── circleOfFifths.json # Circle of fifths data
+│   └── configLoader.js     # Config loader (empty)
+├── theory/                 # Music theory modules
+│   ├── scales.js           # Scale handling
+│   ├── chords.js           # Chord construction
+│   ├── progressions.js     # Progression generation
+│   └── circleOfFifths.js   # Circle of fifths
+├── guitar/                 # Guitar-related modules
+│   └── fretboard.js        # Fretboard visualization
+└── audio/                  # Audio modules
+    ├── chordPlayer.js      # Chord playback
+    └── Tone.js             # Audio library
 ```
 
 ---
 
-## Основные компоненты системы
+## Main System Components
 
-### 1. Главный класс приложения (`script.js`)
+### 1. Main Application Class (`script.js`)
 
-**Класс `ChordProgressionGenerator`** - центральный контроллер приложения:
+**`ChordProgressionGenerator` class** – the central controller:
 
 ```javascript
 class ChordProgressionGenerator {
     constructor() {
-        // Инициализация DOM элементов
+        // Initialize DOM elements
         this.keySelect = document.getElementById('key-select');
         this.modeSelect = document.getElementById('mode-select');
-        // this.generateBtn = document.getElementById('generate-btn');
         this.progressionsDiv = document.getElementById('progressions');
         this.visualizationDiv = document.getElementById('visualization');
         this.bassNotesDiv = document.getElementById('bass-notes');
@@ -55,290 +56,184 @@ class ChordProgressionGenerator {
 }
 ```
 
-**Основные методы:**
-- `init()` - инициализация событий и первоначальная генерация
-- `generate()` - главный метод генерации прогрессий
-- `renderProgressions()` - отрисовка результатов
-- `updateInteractiveCircle()` - обновление квинтового круга
-- `onTonalityChange()` - обработчик изменения тональности
+**Core methods:**
+- `init()` – initialize events and first generation
+- `generate()` – main progression generation method
+- `renderProgressions()` – render results
+- `updateInteractiveCircle()` – update circle of fifths
+- `onTonalityChange()` – handle key change
 
-### 2. Модуль работы с ладами (`theory/scales.js`)
+### 2. Scales Module (`theory/scales.js`)
 
-**Глобальные переменные:**
+**Global variables:**
 ```javascript
-let SCALES = {};        // Паттерны ладов из конфигурации
-let NOTES = [];         // Массив всех нот
-let NOTE_NAMES_RU = {}; // Русские названия нот
+let SCALES = {};        // Scale patterns from config
+let NOTES = [];         // All notes
+let NOTE_NAMES_RU = {}; // Russian note names
 ```
 
-**Ключевые функции:**
-- `getScale(key, mode)` - получение нот лада в заданной тональности
-- `getScaleDegrees(key, mode)` - получение ступеней лада
-- `initializeScales(config)` - инициализация данных из конфигурации
+**Key functions:**
+- `getScale(key, mode)` – get scale notes for key and mode
+- `getScaleDegrees(key, mode)` – get scale degrees
+- `initializeScales(config)` – load data from config
 
-**Алгоритм вычисления лада:**
-1. Находим индекс основной ноты в массиве `NOTES`
-2. Берем интервальный паттерн лада из `SCALES[mode]`
-3. Для каждого интервала вычисляем: `(keyIndex + interval) % 12`
-4. Возвращаем соответствующие ноты
+**Algorithm:**
+1. Find root index in `NOTES`
+2. Take interval pattern from `SCALES[mode]`
+3. For each interval: `(keyIndex + interval) % 12`
+4. Return notes
 
-### 3. Модуль работы с аккордами (`theory/chords.js`)
+### 3. Chords Module (`theory/chords.js`)
 
-**Глобальные переменные:**
+**Global variables:**
 ```javascript
-let CHORD_PATTERNS = {}; // Интервальные паттерны аккордов
-let GUITAR_CHORDS = {};  // Аппликатуры для гитары
+let CHORD_PATTERNS = {}; // Interval patterns for chords
+let GUITAR_CHORDS = {};  // Guitar chord fingerings
 ```
 
-**Ключевые функции:**
-- `buildChord(root, chordType)` - построение аккорда по основному тону и типу
-- `getChordName(root, chordType)` - получение названия аккорда
-- `initializeChords(config)` - инициализация данных
+**Key functions:**
+- `buildChord(root, chordType)` – build chord notes
+- `getChordName(root, chordType)` – get chord name
+- `initializeChords(config)` – load config data
 
-**Алгоритм построения аккорда:**
-1. Находим индекс основного тона в массиве нот
-2. Берем интервальный паттерн из `CHORD_PATTERNS[chordType]`
-3. Для каждого интервала: `(rootIndex + interval) % 12`
-4. Возвращаем ноты аккорда
+**Algorithm:**
+1. Find root index
+2. Get interval pattern from `CHORD_PATTERNS[chordType]`
+3. Compute `(rootIndex + interval) % 12`
+4. Return chord notes
 
-### 4. Модуль генерации прогрессий (`theory/progressions.js`)
+### 4. Progressions Module (`theory/progressions.js`)
 
-**Глобальные переменные:**
+**Global variables:**
 ```javascript
-let PROGRESSIONS = {}; // Прогрессии по ладам
+let PROGRESSIONS = {}; // Progressions by mode
 ```
 
-**Ключевые функции:**
-- `generateProgressions(key, mode)` - главная функция генерации
-- `getBassNotes(chords)` - извлечение басовых нот
+**Key functions:**
+- `generateProgressions(key, mode)` – main generator
+- `getBassNotes(chords)` – extract bass notes
 
-**Алгоритм генерации прогрессий:**
-1. Получаем лад: `getScale(key, mode)`
-2. Берем доступные прогрессии для лада из `PROGRESSIONS[mode]`
-3. Для каждой прогрессии:
-    - Проходим по ступеням (`degrees`)
-    - Для каждой ступени строим аккорд:
-        - Берем ноту лада: `scale[degree - 1]`
-        - Строим аккорд указанного типа: `buildChord(root, chordType)`
-4. Возвращаем объекты с полной информацией об аккордах
+**Algorithm:**
+1. Get scale: `getScale(key, mode)`
+2. Get progressions for mode
+3. For each progression:
+    - Iterate degrees
+    - Build chord with `buildChord(root, chordType)`
+4. Return chord objects
 
 ---
 
-## Детальная логика вычислений
+## Detailed Logic
 
-### Вычисление последовательностей
+### Example progression
 
-**Пример для I-V-vi-IV в C major:**
+**I-V-vi-IV in C major:**
 
-1. **Входные данные:**
-    - Тональность: C
-    - Лад: major
-    - Прогрессия: `{degrees: [1, 5, 6, 4], types: ["major", "major", "minor", "major"]}`
+1. Input:
+    - Key: C
+    - Mode: major
+    - Degrees: [1, 5, 6, 4]
 
-2. **Получение лада:**
+2. Scale:
    ```javascript
    const scale = getScale("C", "major");
-   // Result: ["C", "D", "E", "F", "G", "A", "B"]
+   // ["C", "D", "E", "F", "G", "A", "B"]
    ```
 
-3. **Построение аккордов:**
-    - I степень (1): C + major [0,4,7] → C-E-G (C major)
-    - V степень (5): G + major [0,4,7] → G-B-D (G major)
-    - vi степень (6): A + minor [0,3,7] → A-C-E (A minor)
-    - IV степень (4): F + major [0,4,7] → F-A-C (F major)
-
-### Вычисление басовых нот
-
-**Алгоритм:**
-1. Для каждого аккорда в прогрессии берется основной тон (`chord.root`)
-2. Это становится басовой нотой
-3. Дополнительно предоставляются альтернативы - все ноты аккорда
-
-**Пример для C-G-Am-F:**
-```javascript
-const bassNotes = [
-  { chord: "C", bassNote: "C", alternatives: ["C", "E", "G"] },
-  { chord: "G", bassNote: "G", alternatives: ["G", "B", "D"] },
-  { chord: "Am", bassNote: "A", alternatives: ["A", "C", "E"] },
-  { chord: "F", bassNote: "F", alternatives: ["F", "A", "C"] }
-];
-```
-
-### Вычисление вокальных нот
-
-**Алгоритм:**
-1. Вычисляется полный лад в выбранной тональности
-2. Все ноты лада становятся доступными для вокала
-3. Эти ноты отображаются на грифе и в списке
-
-**Пример для C major:**
-```javascript
-const vocalNotes = getScale("C", "major");
-// Result: ["C", "D", "E", "F", "G", "A", "B"]
-```
+3. Chords:
+    - I: C-E-G
+    - V: G-B-D
+    - vi: A-C-E
+    - IV: F-A-C
 
 ---
 
-## Модуль квинтового круга (`theory/circleOfFifths.js`)
+## Circle of Fifths (`theory/circleOfFifths.js`)
 
-**Класс `CircleOfFifths`:**
-- Визуализирует тональности по квинтовому кругу
-- Показывает связи между тональностями
-- Позволяет интерактивно менять тональность
+**`CircleOfFifths` class:**
+- Visualizes keys around the circle
+- Shows relationships
+- Supports interactive key change
 
-**Ключевые методы:**
-- `getKeyPosition(key, mode)` - получение позиции тональности в круге
-- `renderCircle()` - создание SVG визуализации
-- `renderInteractiveContainer()` - создание интерактивного элемента
-
-**Логика позиционирования:**
-- 12 позиций по кругу (каждая на 30°)
-- Внешнее кольцо - мажорные тональности
-- Внутреннее кольцо - минорные тональности
-- Подсветка текущей тональности и аккордов из прогрессии
+**Key methods:**
+- `getKeyPosition(key, mode)`
+- `renderCircle()`
+- `renderInteractiveContainer()`
 
 ---
 
-## Модуль визуализации грифа (`guitar/fretboard.js`)
+## Fretboard Module (`guitar/fretboard.js`)
 
-**Функции:**
-- `renderChordDiagram(chordName)` - диаграммы аккордов
-- `renderBassFretboard(notes, title)` - гриф бас-гитары (4 струны)
-- `renderVocalFretboard(notes, title)` - гриф гитары (6 струн)
-
-**Алгоритм построения диаграмм:**
-1. Получение аппликатур из `GUITAR_CHORDS[chordName]`
-2. Определение диапазона ладов для отображения
-3. Создание SVG сетки грифа
-4. Отметка позиций пальцев и открытых струн
-5. Добавление меток заглушенных струн
+**Functions:**
+- `renderChordDiagram(chordName)`
+- `renderBassFretboard(notes, title)`
+- `renderVocalFretboard(notes, title)`
 
 ---
 
-## Аудио модуль (`audio/chordPlayer.js`)
+## Audio Module (`audio/chordPlayer.js`)
 
-**Класс `ChordPlayer`** использует библиотеку Tone.js:
+**`ChordPlayer` class** uses Tone.js
 
-**Синтезаторы:**
-- `synth` - гитарные аккорды (PolySynth с triangle волной)
-- `bassSynth` - бас-гитара (более низкие частоты)
-- `vocalSynth` - вокальные ноты (sine волна)
-
-**Эффекты:**
-- Реверб для пространственности
-- Компрессор для естественности
-- Фильтры для имитации гитарного звучания
-
-**Методы воспроизведения:**
-- `playChord(notes)` - воспроизведение аккорда
-- `playProgression(chords)` - последовательность аккордов
-- `playFullArrangement(chords, bassNotes, vocalNotes)` - полная аранжировка
+- Synths: poly, bass, vocal
+- Effects: reverb, compressor, filters
+- Methods:
+    - `playChord(notes)`
+    - `playProgression(chords)`
+    - `playFullArrangement(chords, bassNotes, vocalNotes)`
 
 ---
 
-## Потоки данных в приложении
+## Data Flow
 
-### 1. Инициализация
-```
-index.html загружает все модули →
-script.js создает ChordProgressionGenerator →
-Модули theory/* инициализируются с данными из config/* →
-Создается интерфейс с селекторами и кнопками
-```
-
-### 2. Генерация прогрессий
-```
-Пользователь выбирает тональность и лад →
-ChordProgressionGenerator.generate() →
-generateProgressions(key, mode) →
-getScale(key, mode) для получения нот лада →
-buildChord(root, type) для каждого аккорда →
-getBassNotes() для басовых нот →
-Отрисовка результатов в DOM
-```
-
-### 3. Визуализация
-```
-renderProgressions() создает карточки →
-renderChordDiagram() для каждого аккорда →
-renderBassFretboard() для басовых нот →
-renderVocalFretboard() для вокальных нот →
-CircleOfFifths.renderCircle() для квинтового круга
-```
-
-### 4. Воспроизведение
-```
-Пользователь нажимает кнопку воспроизведения →
-ChordPlayer.playProgression() или playFullArrangement() →
-Tone.js синтезирует звуки →
-Аудио выводится через Web Audio API
-```
+1. Initialization → load configs, create UI
+2. Generation → build scale, chords, progressions
+3. Visualization → render diagrams, fretboards, circle
+4. Playback → Tone.js synth → Web Audio API
 
 ---
 
-## Конфигурационная система
+## Config System
 
-Все музыкальные данные вынесены в JSON файлы:
-
-### scales.json
+### `scales.json`
 ```json
 {
-  "scales": {
-    "major": [0, 2, 4, 5, 7, 9, 11],    // Интервалы в полутонах
-    "minor": [0, 2, 3, 5, 7, 8, 10]
-  },
-  "notes": ["C", "C#", "D", ...],        // Все ноты хроматической гаммы
-  "noteNamesRu": { "C": "До", ... }      // Русские названия
+  "scales": { "major": [0,2,4,5,7,9,11], "minor": [0,2,3,5,7,8,10] },
+  "notes": ["C","C#","D",...],
+  "noteNamesRu": { "C":"До", ... }
 }
 ```
 
-### chords.json
+### `chords.json`
 ```json
 {
-  "chordPatterns": {
-    "major": [0, 4, 7],                  // Интервалы аккордов
-    "minor": [0, 3, 7]
-  },
+  "chordPatterns": { "major":[0,4,7], "minor":[0,3,7] },
   "guitarChords": {
-    "C": [{                              // Аппликатуры
-      "name": "Открытый",
-      "frets": [null, 3, 2, 0, 1, 0],   // Позиции на ладах
-      "fingers": [0, 3, 2, 0, 1, 0]     // Какими пальцами зажимать
-    }]
+    "C": [{ "name":"Open", "frets":[null,3,2,0,1,0], "fingers":[0,3,2,0,1,0] }]
   }
 }
 ```
 
-### progressions.json
+### `progressions.json`
 ```json
 {
   "progressions": {
     "major": [{
-      "name": "I-V-vi-IV",
-      "degrees": [1, 5, 6, 4],           // Ступени лада
-      "types": ["major", "major", "minor", "major"], // Типы аккордов
-      "description": "Популярная прогрессия"
+      "name":"I-V-vi-IV",
+      "degrees":[1,5,6,4],
+      "types":["major","major","minor","major"],
+      "description":"Popular progression"
     }]
   }
 }
 ```
 
-Подробнее [тут](./CONFIG_GUIDE.md).
+See [CONFIG_GUIDE.md](./CONFIG_GUIDE.md) for details.
 
 ---
 
-## Расширяемость системы
+## Extensibility
 
-### Добавление новых ладов:
-1. Добавить интервальный паттерн в `scales.json`
-2. Добавить прогрессии в `progressions.json`
-3. Обновить селектор в `index.html`
-
-### Добавление новых типов аккордов:
-1. Добавить паттерн в `chordPatterns` файла `chords.json`
-2. Добавить аппликатуры в `guitarChords`
-3. Обновить функцию `getChordName()` в `theory/chords.js`
-
-### Добавление новых прогрессий:
-1. Добавить объект прогрессии в соответствующий лад в `progressions.json`
-2. Система автоматически подхватит новые прогрессии
+- **New scales:** add to `scales.json`, `progressions.json`, update UI
+- **New chords:** add to `chords.json`, update chord functions
+- **New progressions:** extend `progressions.json`, auto-loaded

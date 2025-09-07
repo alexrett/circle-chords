@@ -1,29 +1,29 @@
-# Документация по конфигурации приложения
+# Application Configuration Documentation
 
-## Обзор
+## Overview
 
-Все музыкальные данные приложения (аккорды, последовательности, лады, квинтовый круг) вынесены в JSON файлы конфигурации в папке `/config/`. Это позволяет легко расширять и изменять функциональность без редактирования кода.
+All musical data (chords, progressions, scales, circle of fifths) is stored in JSON configuration files in the `/config/` folder. This allows easy extension and modification without editing code.
 
-## Структура конфигураций
+## Configuration Structure
 
 ```
 config/
-├── scales.json         # Лады, ноты и их названия
-├── chords.json         # Аккордовые паттерны и аппликатуры
-├── progressions.json   # Аккордовые последовательности
-├── circleOfFifths.json # Данные квинтового круга
-└── configLoader.js     # Загрузчик конфигураций
+├── scales.json         # Scales, notes, and names
+├── chords.json         # Chord patterns and fingerings
+├── progressions.json   # Chord progressions
+├── circleOfFifths.json # Circle of fifths data
+└── configLoader.js     # Config loader
 ```
 
 ---
 
-## 1. Лады и ноты (`config/scales.json`)
+## 1. Scales and Notes (`config/scales.json`)
 
-### Структура файла:
+### File structure:
 ```json
 {
   "scales": {
-    "название_лада": [интервалы в полутонах]
+    "scale_name": [intervals in semitones]
   },
   "notes": ["C", "C#", "D", ...],
   "noteNamesRu": {
@@ -32,7 +32,7 @@ config/
 }
 ```
 
-### Добавление нового лада:
+### Adding a new scale:
 ```json
 {
   "scales": {
@@ -44,34 +44,34 @@ config/
 }
 ```
 
-**Пример добавления блюзового лада:**
-- Добавьте новую запись в объект `scales`
-- Укажите интервалы в полутонах от тоники
-- Автоматически станет доступен в селекторе ладов
+**Example: Adding a blues scale**
+- Add a new entry under `scales`
+- Define intervals in semitones from tonic
+- It will automatically appear in the scale selector
 
 ---
 
-## 2. Аккорды (`config/chords.json`)
+## 2. Chords (`config/chords.json`)
 
-### Структура файла:
+### File structure:
 ```json
 {
   "chordPatterns": {
-    "тип_аккорда": [интервалы]
+    "chord_type": [intervals]
   },
   "guitarChords": {
-    "Аккорд": [
+    "Chord": [
       {
-        "name": "Название позиции",
-        "frets": [лады для каждой струны],
-        "fingers": [пальцы для каждой струны]
+        "name": "Position name",
+        "frets": [frets for each string],
+        "fingers": [fingers for each string]
       }
     ]
   }
 }
 ```
 
-### Добавление нового типа аккорда:
+### Adding a new chord type:
 ```json
 "chordPatterns": {
   "major": [0, 4, 7],
@@ -82,17 +82,17 @@ config/
 }
 ```
 
-### Добавление новой аппликатуры:
+### Adding a new fingering:
 ```json
 "guitarChords": {
   "C": [
     {
-      "name": "Открытый",
+      "name": "Open",
       "frets": [null, 3, 2, 0, 1, 0],
       "fingers": [0, 3, 2, 0, 1, 0]
     },
     {
-      "name": "Новая позиция",
+      "name": "New position",
       "frets": [8, 10, 10, 9, 8, 8],
       "fingers": [1, 3, 4, 2, 1, 1]
     }
@@ -100,61 +100,61 @@ config/
 }
 ```
 
-**Важные правила:**
-- `frets`: массив из 6 элементов (6-1 струны)
-- `null` = заглушенная струна
-- `0` = открытая струна  
-- `1,2,3...` = номер лада
-- `fingers`: пальцы (0 = не играется, 1-4 = пальцы)
+**Important rules:**
+- `frets`: 6 elements (6 strings)
+- `null` = muted string
+- `0` = open string
+- `1,2,3...` = fret number
+- `fingers`: 0 = unused, 1-4 = finger number
 
 ---
 
-## 3. Аккордовые последовательности (`config/progressions.json`)
+## 3. Progressions (`config/progressions.json`)
 
-### Структура файла:
+### File structure:
 ```json
 {
   "progressions": {
-    "лад": [
+    "scale": [
       {
-        "name": "Название прогрессии",
-        "degrees": [ступени],
-        "types": [типы аккордов],
-        "description": "Описание"
+        "name": "Progression name",
+        "degrees": [scale degrees],
+        "types": [chord types],
+        "description": "Description"
       }
     ]
   }
 }
 ```
 
-### Добавление новой прогрессии:
+### Adding a new progression:
 ```json
 "major": [
   {
-    "name": "I-V-vi-IV (Поп-прогрессия)",
+    "name": "I-V-vi-IV (Pop progression)",
     "degrees": [1, 5, 6, 4],
     "types": ["major", "major", "minor", "major"],
-    "description": "Самая популярная прогрессия в поп-музыке"
+    "description": "Most popular pop progression"
   },
   {
-    "name": "I-vi-ii-V (Джазовый стандарт)",
+    "name": "I-vi-ii-V (Jazz standard)",
     "degrees": [1, 6, 2, 5],
     "types": ["major", "minor", "minor", "major"],
-    "description": "Классическая джазовая последовательность"
+    "description": "Classic jazz sequence"
   }
 ]
 ```
 
-**Правила:**
-- `degrees`: ступени лада (1-7)
-- `types`: тип каждого аккорда ("major", "minor", "dim", "maj7", "min7", "dom7")
-- Для каждого лада можно добавлять любое количество прогрессий
+**Rules:**
+- `degrees`: scale steps (1-7)
+- `types`: chord types ("major", "minor", "dim", "maj7", "min7", "dom7")
+- Each scale can contain multiple progressions
 
 ---
 
-## 4. Квинтовый круг (`config/circleOfFifths.json`)
+## 4. Circle of Fifths (`config/circleOfFifths.json`)
 
-### Структура файла:
+### File structure:
 ```json
 {
   "majorKeys": ["C", "G", "D", ...],
@@ -165,7 +165,7 @@ config/
 }
 ```
 
-**Обычно не требует изменений**, но при добавлении новых тональностей:
+**Usually doesn’t require changes**, but new keys can be added:
 
 ```json
 {
@@ -180,11 +180,11 @@ config/
 
 ---
 
-## Практические примеры
+## Practical Examples
 
-### Пример 1: Добавление септаккордов
+### Example 1: Adding seventh chords
 
-**1. Добавляем паттерны в `chords.json`:**
+**1. Add patterns in `chords.json`:**
 ```json
 "chordPatterns": {
   "maj7": [0, 4, 7, 11],
@@ -194,30 +194,30 @@ config/
 }
 ```
 
-**2. Добавляем аппликатуры:**
+**2. Add fingerings:**
 ```json
 "Cmaj7": [
   {
-    "name": "Открытый",
+    "name": "Open",
     "frets": [null, 3, 2, 0, 0, 0],
     "fingers": [0, 3, 2, 0, 0, 0]
   }
 ]
 ```
 
-**3. Используем в прогрессиях:**
+**3. Use in progressions:**
 ```json
 {
-  "name": "ii7-V7-Imaj7 (Джазовая)",
+  "name": "ii7-V7-Imaj7 (Jazz)",
   "degrees": [2, 5, 1],
   "types": ["min7", "dom7", "maj7"],
-  "description": "Джазовая каденция с септаккордами"
+  "description": "Jazz cadence with sevenths"
 }
 ```
 
-### Пример 2: Добавление нового лада (Гармонический минор)
+### Example 2: Adding a new scale (Harmonic Minor)
 
-**1. В `scales.json`:**
+**1. In `scales.json`:**
 ```json
 "scales": {
   "major": [0, 2, 4, 5, 7, 9, 11],
@@ -226,61 +226,60 @@ config/
 }
 ```
 
-**2. В `progressions.json`:**
+**2. In `progressions.json`:**
 ```json
 "harmonic_minor": [
   {
     "name": "i-iv-V-i",
     "degrees": [1, 4, 5, 1],
     "types": ["minor", "minor", "major", "minor"],
-    "description": "Классическая прогрессия гармонического минора"
+    "description": "Classic harmonic minor progression"
   }
 ]
 ```
 
-**3. Обновить HTML селектор:**
+**3. Update HTML selector:**
 ```html
 <select id="mode-select">
-  <option value="major">Мажор</option>
-  <option value="minor">Минор</option>
-  <option value="harmonic_minor">Гармонический минор</option>
+  <option value="major">Major</option>
+  <option value="minor">Minor</option>
+  <option value="harmonic_minor">Harmonic Minor</option>
 </select>
 ```
 
 ---
 
-## Быстрые советы
+## Quick Tips
 
-### ✅ Что можно легко добавлять:
-- Новые аппликатуры существующих аккордов
-- Новые аккордовые последовательности
-- Новые типы аккордов (sus2, sus4, add9, etc.)
-- Новые лады и их прогрессии
+### ✅ Safe to add:
+- New fingerings
+- New progressions
+- New chord types (sus2, sus4, add9, etc.)
+- New scales and their progressions
 
-### ⚠️ Что требует осторожности:
-- Изменение основных нот (может сломать логику)
-- Изменение квинтового круга
-- Изменение базовых типов аккордов (major/minor)
+### ⚠️ Handle with care:
+- Changing base notes (may break logic)
+- Editing the circle of fifths
+- Modifying basic chord types (major/minor)
 
-### 🛠️ Проверка изменений:
-1. Сохраните JSON файл
-2. Обновите страницу в браузере
-3. Проверьте консоль на ошибки
-4. Протестируйте новую функциональность
+### 🛠️ Testing changes:
+1. Save JSON file
+2. Refresh the page
+3. Check console for errors
+4. Test new features
 
 ---
 
-## Валидация JSON
+## JSON Validation
 
-Перед сохранением убедитесь, что JSON валидный:
-- Используйте онлайн валидаторы (jsonlint.com)
-- Проверьте правильность скобок и запятых
-- Убедитесь в отсутствии trailing commas
+Before saving, ensure JSON is valid:
+- Use online validators (jsonlint.com)
+- Check braces and commas
+- Avoid trailing commas
 
-## Резервное копирование
+## Backup
 
-Перед внесением изменений создайте копию конфигурационных файлов:
+Always back up config files before editing:
 ```bash
 cp -r config/ config_backup/
 ```
-
