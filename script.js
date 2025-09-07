@@ -85,6 +85,18 @@ class ChordProgressionGenerator {
             });
             card.appendChild(playFullBtn);
 
+            // Добавляем квинтовый круг
+            if (typeof CircleOfFifths !== 'undefined') {
+                const circleOfFifths = new CircleOfFifths();
+                const circleContainer = circleOfFifths.renderCircleContainer(
+                    key,
+                    mode,
+                    progression.chords,
+                    progression.name
+                );
+                card.appendChild(circleContainer);
+            }
+
             // Басовые ноты и гриф внутри карточки
             const bassNotes = getBassNotes(progression.chords);
             const bassRootNotes = bassNotes.map(b => b.bassNote);

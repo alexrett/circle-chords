@@ -319,6 +319,45 @@ select:focus {
     transform: translateY(0);
 }
 
+.circle-of-fifths-container {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 2px solid #e9ecef;
+    text-align: center;
+}
+
+.circle-title {
+    font-size: 1.2em;
+    color: #495057;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.circle-description {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.circle-svg-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.circle-of-fifths {
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.circle-of-fifths path:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
     .controls {
         flex-direction: column;
