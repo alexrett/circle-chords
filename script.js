@@ -72,6 +72,19 @@ class ChordProgressionGenerator {
             });
             card.appendChild(playProgressionBtn);
 
+            // Добавляем кнопку полной аранжировки
+            const playFullBtn = document.createElement('button');
+            playFullBtn.className = 'play-full-btn';
+            playFullBtn.innerHTML = '🎵 Проиграть с басом и вокалом';
+            playFullBtn.addEventListener('click', async () => {
+                if (typeof window.chordPlayer !== 'undefined') {
+                    const bassNotes = getBassNotes(progression.chords).map(b => b.bassNote);
+                    const scaleNotes = getScale(key, mode);
+                    await window.chordPlayer.playFullArrangement(progression.chords, bassNotes, scaleNotes);
+                }
+            });
+            card.appendChild(playFullBtn);
+
             // Басовые ноты и гриф внутри карточки
             const bassNotes = getBassNotes(progression.chords);
             const bassRootNotes = bassNotes.map(b => b.bassNote);

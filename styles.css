@@ -294,8 +294,28 @@ select:focus {
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
+.play-full-btn {
+    background: linear-gradient(45deg, #e74c3c, #f39c12);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 0 20px 0;
+    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.play-full-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
 .play-chord-btn:active,
-.play-progression-btn:active {
+.play-progression-btn:active,
+.play-full-btn:active {
     transform: translateY(0);
 }
 
