@@ -1,0 +1,40 @@
+# Node, macOS, IDE, and system files
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*.log
+npm-debug.log*
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Git
+.git/
+.gitignore
+
+# Build/output
+/dist/
+/build/
+
+# Other
+.env
+*.bak
+*.tmp
+
+# VS Code
+.history/
+
+# Python
+__pycache__/
+*.pyc
+
+# Misc
+*.orig
+
+# Exclude audio/Tone.js from ignore (for offline Tone.js)
+!audio/Tone.js
+
