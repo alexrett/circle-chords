@@ -16,7 +16,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
@@ -25,4 +25,3 @@ jobs:
         uses: actions/deploy-pages@v3
 
 # Для публикации убедитесь, что в настройках репозитория включен GitHub Pages и выбран source: GitHub Actions
-
