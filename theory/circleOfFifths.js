@@ -63,7 +63,7 @@ class CircleOfFifths {
             const majorKey = this.majorKeys[i];
             const minorKey = this.minorKeys[i].replace('m', '');
 
-            // ВНЕШНЕЕ КОЛЬЦО (мажорные ��о��альности)
+            // ВНЕШНЕЕ КОЛЬЦО (мажорные тональности)
             const majorX1 = centerX + outerRadius * Math.cos(angle1);
             const majorY1 = centerY + outerRadius * Math.sin(angle1);
             const majorX2 = centerX + outerRadius * Math.cos(angle2);
@@ -200,7 +200,7 @@ class CircleOfFifths {
                 sector.addEventListener('click', async (e) => {
                     const chordName = e.target.getAttribute('data-chord');
                     if (chordName && typeof window.chordPlayer !== 'undefined') {
-                        // Получаем ноты аккорда и пр��игрываем его
+                        // Получаем ноты аккорда и проигрываем его
                         const chordNotes = this.getChordNotes(chordName);
                         await window.chordPlayer.playChord(chordNotes);
 
