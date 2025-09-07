@@ -22,7 +22,6 @@ class ChordProgressionGenerator {
     }
     renderProgressions(progressions, key, mode) {
         this.progressionsDiv.innerHTML = '';
-        // Удаляем отдельную визуализацию аккордов
         this.visualizationDiv.innerHTML = '';
         this.bassNotesDiv.innerHTML = '';
         progressions.forEach((progression, index) => {
@@ -60,13 +59,12 @@ class ChordProgressionGenerator {
             card.appendChild(title);
             card.appendChild(description);
             card.appendChild(chordsList);
-            this.progressionsDiv.appendChild(card);
-            // Басовые ноты
+            // Басовые ноты под прогрессией
             const bassSection = document.createElement('div');
             bassSection.className = 'bass-section';
             const bassTitle = document.createElement('h4');
             bassTitle.className = 'bass-title';
-            bassTitle.textContent = `Басовые ноты для "${progression.name}":`;
+            bassTitle.textContent = `Басовые ноты для этой последовательности:`;
             const bassNotesList = document.createElement('div');
             bassNotesList.className = 'bass-notes-list';
             const bassNotes = getBassNotes(progression.chords);
@@ -78,7 +76,33 @@ class ChordProgressionGenerator {
             });
             bassSection.appendChild(bassTitle);
             bassSection.appendChild(bassNotesList);
-            this.bassNotesDiv.appendChild(bassSection);
+            card.appendChild(bassSection);
+            // Визуализация басовых нот на грифе
+            const bassRootNotes = bassNotes.map(b => b.bassNote);
+            const bassFretboard = renderFretboard(bassRootNotes, 'Басовые ноты на грифе');
+            card.appendChild(bassFretboard);
+            // Вокальные ноты
+            const vocalSection = document.createElement('div');
+            vocalSection.className = 'bass-section';
+            const vocalTitle = document.createElement('h4');
+            vocalTitle.className = 'bass-title';
+            vocalTitle.textContent = `Возможные вокальные ноты:`;
+            const vocalNotesList = document.createElement('div');
+            vocalNotesList.className = 'bass-notes-list';
+            const scaleNotes = getScale(key, mode);
+            scaleNotes.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'bass-note';
+                noteDiv.textContent = NOTE_NAMES_RU[note] || note;
+                vocalNotesList.appendChild(noteDiv);
+            });
+            vocalSection.appendChild(vocalTitle);
+            vocalSection.appendChild(vocalNotesList);
+            card.appendChild(vocalSection);
+            // Визуализация вокальных нот на грифе
+            const vocalFretboard = renderFretboard(scaleNotes, 'Вокальные ноты на грифе');
+            card.appendChild(vocalFretboard);
+            this.progressionsDiv.appendChild(card);
         });
     }
 }
