@@ -43,6 +43,18 @@ class CircleOfFifths {
         // Фон
         svg += `<circle cx="${centerX}" cy="${centerY}" r="${outerRadius + 10}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>`;
 
+        // Подготавливаем списки аккордов из прогрессии
+        const majorChordsInProgression = [];
+        const minorChordsInProgression = [];
+
+        chordProgression.forEach(chord => {
+            if (chord.name.includes('m')) {
+                minorChordsInProgression.push(chord.name.replace('m', ''));
+            } else {
+                majorChordsInProgression.push(chord.name);
+            }
+        });
+
         // Рисуем сектора для каждой тональности
         for (let i = 0; i < 12; i++) {
             const angle1 = this.angles[i] - Math.PI / 12; // -15 градусов
@@ -51,13 +63,7 @@ class CircleOfFifths {
             const majorKey = this.majorKeys[i];
             const minorKey = this.minorKeys[i].replace('m', '');
 
-            // Подсвечиваем аккорды из прогрессии
-            const chordsInProgression = chordProgression.map(chord => {
-                return chord.name.replace('m', '');
-            });
-
-            // ВНЕШНЕЕ КОЛЬЦО (мажорные тональности)
-            // Координаты для внешнего кольца
+            // ВНЕШНЕЕ КОЛЬЦО (мажорные ��ональности)
             const majorX1 = centerX + outerRadius * Math.cos(angle1);
             const majorY1 = centerY + outerRadius * Math.sin(angle1);
             const majorX2 = centerX + outerRadius * Math.cos(angle2);
@@ -67,20 +73,31 @@ class CircleOfFifths {
             const majorX4 = centerX + middleRadius * Math.cos(angle1);
             const majorY4 = centerY + middleRadius * Math.sin(angle1);
 
+            // Определяем, является ли мажорный аккорд частью прогрессии
+            const isMajorInProgression = majorChordsInProgression.includes(majorKey);
+            const isMajorCurrentKey = (currentMode === 'major' && majorKey === currentKey);
+
             // Цвет для мажорного сектора
             let majorFillColor = '#ffffff';
-            if (currentMode === 'major' && majorKey === currentKey) {
+            let majorCursor = 'default';
+            let majorOpacity = isMajorInProgression || isMajorCurrentKey ? '1' : '0.3';
+
+            if (isMajorCurrentKey) {
                 majorFillColor = '#667eea';
-            } else if (chordsInProgression.includes(majorKey)) {
+            } else if (isMajorInProgression) {
                 majorFillColor = '#e3f2fd';
+                majorCursor = 'pointer';
             }
 
             // Рисуем внешний сектор (мажор)
-            svg += `<path d="M ${majorX1} ${majorY1} A ${outerRadius} ${outerRadius} 0 0 1 ${majorX2} ${majorY2} L ${majorX3} ${majorY3} A ${middleRadius} ${middleRadius} 0 0 0 ${majorX4} ${majorY4} Z" 
-                    fill="${majorFillColor}" stroke="#dee2e6" stroke-width="1"/>`;
+            const majorSectorId = `major-sector-${i}`;
+            svg += `<path id="${majorSectorId}" class="circle-sector ${isMajorInProgression ? 'interactive' : 'inactive'}" 
+                    d="M ${majorX1} ${majorY1} A ${outerRadius} ${outerRadius} 0 0 1 ${majorX2} ${majorY2} L ${majorX3} ${majorY3} A ${middleRadius} ${middleRadius} 0 0 0 ${majorX4} ${majorY4} Z" 
+                    fill="${majorFillColor}" stroke="#dee2e6" stroke-width="1" 
+                    opacity="${majorOpacity}" style="cursor: ${majorCursor}" 
+                    data-chord="${majorKey}" data-type="major"/>`;
 
             // ВНУТРЕННЕЕ КОЛЬЦО (минорные тональности)
-            // Координаты для внутреннего кольца
             const minorX1 = centerX + middleRadius * Math.cos(angle1);
             const minorY1 = centerY + middleRadius * Math.sin(angle1);
             const minorX2 = centerX + middleRadius * Math.cos(angle2);
@@ -90,35 +107,51 @@ class CircleOfFifths {
             const minorX4 = centerX + innerRadius * Math.cos(angle1);
             const minorY4 = centerY + innerRadius * Math.sin(angle1);
 
+            // Определяем, является ли минорный аккорд частью прогрессии
+            const isMinorInProgression = minorChordsInProgression.includes(minorKey);
+            const isMinorCurrentKey = (currentMode === 'minor' && minorKey === currentKey);
+
             // Цвет для минорного сектора
             let minorFillColor = '#f0f0f0';
-            if (currentMode === 'minor' && minorKey === currentKey) {
+            let minorCursor = 'default';
+            let minorOpacity = isMinorInProgression || isMinorCurrentKey ? '1' : '0.3';
+
+            if (isMinorCurrentKey) {
                 minorFillColor = '#667eea';
-            } else if (chordsInProgression.includes(minorKey)) {
+            } else if (isMinorInProgression) {
                 minorFillColor = '#e3f2fd';
+                minorCursor = 'pointer';
             }
 
             // Рисуем внутренний сектор (минор)
-            svg += `<path d="M ${minorX1} ${minorY1} A ${middleRadius} ${middleRadius} 0 0 1 ${minorX2} ${minorY2} L ${minorX3} ${minorY3} A ${innerRadius} ${innerRadius} 0 0 0 ${minorX4} ${minorY4} Z" 
-                    fill="${minorFillColor}" stroke="#dee2e6" stroke-width="1"/>`;
+            const minorSectorId = `minor-sector-${i}`;
+            svg += `<path id="${minorSectorId}" class="circle-sector ${isMinorInProgression ? 'interactive' : 'inactive'}" 
+                    d="M ${minorX1} ${minorY1} A ${middleRadius} ${middleRadius} 0 0 1 ${minorX2} ${minorY2} L ${minorX3} ${minorY3} A ${innerRadius} ${innerRadius} 0 0 0 ${minorX4} ${minorY4} Z" 
+                    fill="${minorFillColor}" stroke="#dee2e6" stroke-width="1" 
+                    opacity="${minorOpacity}" style="cursor: ${minorCursor}" 
+                    data-chord="${minorKey}m" data-type="minor"/>`;
 
             // Добавляем мажорную тональность (внешний круг)
             const majorAngle = this.angles[i];
             const majorX = centerX + ((outerRadius + middleRadius) / 2) * Math.cos(majorAngle);
             const majorY = centerY + ((outerRadius + middleRadius) / 2) * Math.sin(majorAngle);
 
-            const majorTextColor = (currentMode === 'major' && majorKey === currentKey) ? 'white' : '#495057';
+            const majorTextColor = isMajorCurrentKey ? 'white' : '#495057';
+            const majorTextOpacity = isMajorInProgression || isMajorCurrentKey ? '1' : '0.5';
             svg += `<text x="${majorX}" y="${majorY}" text-anchor="middle" dominant-baseline="middle" 
-                    font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="${majorTextColor}">
+                    font-family="Arial, sans-serif" font-size="12" font-weight="bold" 
+                    fill="${majorTextColor}" opacity="${majorTextOpacity}" style="pointer-events: none;">
                     ${majorKey}</text>`;
 
             // Добавляем минорную тональность (внутренний круг)
             const minorX = centerX + ((middleRadius + innerRadius) / 2) * Math.cos(majorAngle);
             const minorY = centerY + ((middleRadius + innerRadius) / 2) * Math.sin(majorAngle);
 
-            const minorTextColor = (currentMode === 'minor' && minorKey === currentKey) ? 'white' : '#6c757d';
+            const minorTextColor = isMinorCurrentKey ? 'white' : '#6c757d';
+            const minorTextOpacity = isMinorInProgression || isMinorCurrentKey ? '1' : '0.5';
             svg += `<text x="${minorX}" y="${minorY}" text-anchor="middle" dominant-baseline="middle" 
-                    font-family="Arial, sans-serif" font-size="10" fill="${minorTextColor}">
+                    font-family="Arial, sans-serif" font-size="10" 
+                    fill="${minorTextColor}" opacity="${minorTextOpacity}" style="pointer-events: none;">
                     ${this.minorKeys[i]}</text>`;
         }
 
@@ -127,7 +160,6 @@ class CircleOfFifths {
                 font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#495057">
                 ${currentKey} ${currentMode === 'major' ? 'мажор' : 'минор'}</text>`;
 
-        // Легенда
         svg += `<text x="${centerX}" y="${centerY + 10}" text-anchor="middle" dominant-baseline="middle" 
                 font-family="Arial, sans-serif" font-size="10" fill="#6c757d">
                 Квинтовый круг</text>`;
@@ -149,7 +181,7 @@ class CircleOfFifths {
         const description = document.createElement('p');
         description.innerHTML = `
             <strong>Синий</strong> - текущая тональность<br>
-            <strong>Голубой</strong> - аккорды из прогрессии<br>
+            <strong>Голубой</strong> - аккорды из прогрессии (кликабельные)<br>
             <strong>Внешний круг</strong> - мажорные тональности<br>
             <strong>Внутренний круг</strong> - минорные тональности
         `;
@@ -161,7 +193,53 @@ class CircleOfFifths {
         svgContainer.className = 'circle-svg-container';
         container.appendChild(svgContainer);
 
+        // Добавляем обработчики событий для интерактивных секторов
+        setTimeout(() => {
+            const interactiveSectors = container.querySelectorAll('.circle-sector.interactive');
+            interactiveSectors.forEach(sector => {
+                sector.addEventListener('click', async (e) => {
+                    const chordName = e.target.getAttribute('data-chord');
+                    if (chordName && typeof window.chordPlayer !== 'undefined') {
+                        // Получаем ноты аккорда и пр��игрываем его
+                        const chordNotes = this.getChordNotes(chordName);
+                        await window.chordPlayer.playChord(chordNotes);
+
+                        // Визуальная обратная связь
+                        const originalFill = e.target.getAttribute('fill');
+                        e.target.setAttribute('fill', '#28a745');
+                        setTimeout(() => {
+                            e.target.setAttribute('fill', originalFill);
+                        }, 200);
+                    }
+                });
+
+                // Добавляем эффект наведения
+                sector.addEventListener('mouseenter', (e) => {
+                    const originalOpacity = e.target.getAttribute('opacity');
+                    e.target.setAttribute('data-original-opacity', originalOpacity);
+                    e.target.setAttribute('opacity', '0.8');
+                });
+
+                sector.addEventListener('mouseleave', (e) => {
+                    const originalOpacity = e.target.getAttribute('data-original-opacity');
+                    e.target.setAttribute('opacity', originalOpacity);
+                });
+            });
+        }, 100);
+
         return container;
+    }
+
+    // Получить ноты аккорда (используем существующую функцию из fretboard.js)
+    getChordNotes(chordName) {
+        const isMinor = chordName.includes('m') && !chordName.includes('maj');
+        const root = chordName.replace('m', '');
+
+        if (isMinor) {
+            return buildChord(root, 'minor');
+        } else {
+            return buildChord(root, 'major');
+        }
     }
 }
 

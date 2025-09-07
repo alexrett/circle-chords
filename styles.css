@@ -358,6 +358,23 @@ select:focus {
     cursor: pointer;
 }
 
+.circle-sector.interactive {
+    transition: opacity 0.2s ease, fill 0.2s ease;
+}
+
+.circle-sector.interactive:hover {
+    opacity: 0.8 !important;
+}
+
+.circle-sector.inactive {
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.circle-of-fifths text {
+    user-select: none;
+}
+
 @media (max-width: 768px) {
     .controls {
         flex-direction: column;
