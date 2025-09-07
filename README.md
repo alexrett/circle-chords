@@ -37,8 +37,6 @@
 ## Автоматическая публикация
 Для автоматической сборки и публикации на GitHub Pages используется GitHub Actions workflow `.github/workflows/pages.yml`.
 
-## Автор
-- [malikov](https://github.com/yourusername)
 
 ---
 
