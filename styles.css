@@ -257,6 +257,48 @@ select:focus {
     font-style: italic;
 }
 
+.play-chord-btn {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.play-chord-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.play-progression-btn {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 20px 0;
+    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.play-progression-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.play-chord-btn:active,
+.play-progression-btn:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 768px) {
     .controls {
         flex-direction: column;

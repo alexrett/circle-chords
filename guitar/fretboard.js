@@ -6,6 +6,20 @@ function renderChordDiagram(chordName) {
     const container = document.createElement('div');
     container.className = 'chord-variations-container';
 
+    // Добавляем кнопку воспроизведения для всего аккорда
+    const playButton = document.createElement('button');
+    playButton.className = 'play-chord-btn';
+    playButton.innerHTML = '🔊 ' + chordName;
+    playButton.title = `Проиграть аккорд ${chordName}`;
+    playButton.addEventListener('click', async () => {
+        if (typeof window.chordPlayer !== 'undefined') {
+            // Получаем ноты аккорда
+            const chordNotes = getChordNotes(chordName);
+            await window.chordPlayer.playChord(chordNotes);
+        }
+    });
+    container.appendChild(playButton);
+
     chordVariations.forEach((variation, index) => {
         const variationContainer = document.createElement('div');
         variationContainer.className = 'chord-variation';
@@ -62,6 +76,20 @@ function renderChordDiagram(chordName) {
     });
 
     return container;
+}
+
+// Функция для получения нот аккорда
+function getChordNotes(chordName) {
+    // Определяем тип аккорда (мажор/минор)
+    const isMinor = chordName.includes('m') && !chordName.includes('maj');
+    const root = chordName.replace('m', '');
+
+    // Получаем ноты аккорда
+    if (isMinor) {
+        return buildChord(root, 'minor');
+    } else {
+        return buildChord(root, 'major');
+    }
 }
 
 // Визуализация грифа с подсветкой выбранных нот

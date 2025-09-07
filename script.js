@@ -60,6 +60,18 @@ class ChordProgressionGenerator {
             card.appendChild(title);
             card.appendChild(description);
             card.appendChild(chordsList);
+
+            // Добавляем кнопку воспроизведения всей последовательности
+            const playProgressionBtn = document.createElement('button');
+            playProgressionBtn.className = 'play-progression-btn';
+            playProgressionBtn.innerHTML = '▶️ Проиграть последовательность';
+            playProgressionBtn.addEventListener('click', async () => {
+                if (typeof window.chordPlayer !== 'undefined') {
+                    await window.chordPlayer.playProgression(progression.chords);
+                }
+            });
+            card.appendChild(playProgressionBtn);
+
             // Басовые ноты и гриф внутри карточки
             const bassNotes = getBassNotes(progression.chords);
             const bassRootNotes = bassNotes.map(b => b.bassNote);
