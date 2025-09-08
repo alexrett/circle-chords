@@ -99,14 +99,14 @@ export default function App() {
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-cyan-500/10 rounded-xl p-3">
         <h1 className="m-0 text-lg sm:text-xl font-semibold text-indigo-700 drop-shadow-sm">{t('app.title') || 'Guitar Progression Generator'}</h1>
         <div className="flex items-center gap-2">
-          <nav className="inline-flex rounded-lg overflow-hidden border">
-            <button
+          <nav className="inline-flex rounded-lg border">
+            <button type="button"
               className={`px-3 py-1.5 text-sm ${page === 'progressions' ? 'bg-white text-indigo-700' : 'bg-white/60 text-gray-700'}`}
               onClick={() => setPage('progressions')}
             >
               {t('ui.tabs.progressions') || 'Progressions'}
             </button>
-            <button
+            <button type="button"
               className={`px-3 py-1.5 text-sm ${page === 'chords' ? 'bg-white text-indigo-700' : 'bg-white/60 text-gray-700'}`}
               onClick={() => setPage('chords')}
             >

@@ -9,10 +9,10 @@ export default function LanguageSelector({ value, onChange }: { value: string; o
   }, [])
 
   return (
-    <label className="inline-flex items-center gap-2 text-sm w-full sm:w-auto">
+    <label className="inline-flex items-center gap-2 text-sm">
       <span className="whitespace-nowrap">{(i18n.t('controls.language') as string) || 'Language'}</span>
       <select
-        className="border rounded px-2 py-2 bg-white w-full sm:w-auto"
+        className="border rounded px-2 py-2 bg-white"
         value={value}
         onChange={(e) => { setLanguage(e.target.value); onChange(e.target.value) }}
         id="language-select"
