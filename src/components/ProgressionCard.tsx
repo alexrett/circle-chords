@@ -68,6 +68,8 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
                   chordName={chord.name}
                   variations={guitarChords[chord.name] || []}
                   onPlay={async () => {
+                    const { ensureAudio } = await import('../lib/audio')
+                    await ensureAudio()
                     await chordPlayer.playChord(chord.notes)
                   }}
                 />
@@ -87,10 +89,14 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
 
       <div className="flex gap-2 flex-wrap mt-2">
         <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
+          const { ensureAudio } = await import('../lib/audio')
+          await ensureAudio()
           await chordPlayer.playProgression(progression.chords)
         }}>{t('progressions.playProgression') || 'Play progression'}</button>
 
         <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-3 py-2 hover:from-emerald-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400" onClick={async () => {
+          const { ensureAudio } = await import('../lib/audio')
+          await ensureAudio()
           await chordPlayer.playFullArrangement(
             progression.chords,
             bassNotes,
