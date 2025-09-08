@@ -13,24 +13,19 @@ This is a web application for generating chord progressions with visualization o
 ```
 /
 ├── index.html              # Main HTML file
-├── script.js               # Main application class
-├── styles.css              # UI styles
+├── src/index.css           # Tailwind entry
 ├── config/                 # Configuration data
 │   ├── scales.json         # Scales and notes
 │   ├── chords.json         # Chords and fingerings
 │   ├── progressions.json   # Chord progressions
 │   ├── circleOfFifths.json # Circle of fifths data
 │   └── configLoader.js     # Config loader (empty)
-├── theory/                 # Music theory modules
-│   ├── scales.js           # Scale handling
-│   ├── chords.js           # Chord construction
-│   ├── progressions.js     # Progression generation
-│   └── circleOfFifths.js   # Circle of fifths
-├── guitar/                 # Guitar-related modules
-│   └── fretboard.js        # Fretboard visualization
-└── audio/                  # Audio modules
-    ├── chordPlayer.js      # Chord playback
-    └── Tone.js             # Audio library
+├── src/lib/                # Music theory + audio modules (TS)
+│   ├── theory.ts           # Scale/chord/progression logic
+│   ├── audio.ts            # Audio playback via tone
+│   ├── config.ts           # Load JSON configs
+│   └── types.ts            # Shared types
+└── src/components/         # React components (TSX)
 ```
 
 ---
@@ -237,3 +232,33 @@ See [CONFIG_GUIDE.md](./CONFIG_GUIDE.md) for details.
 - **New scales:** add to `scales.json`, `progressions.json`, update UI
 - **New chords:** add to `chords.json`, update chord functions
 - **New progressions:** extend `progressions.json`, auto-loaded
+## React + TypeScript Migration
+
+The app has been refactored to a React + Vite setup with TypeScript. Legacy DOM-rendering modules were replaced by React components (circle of fifths, fretboards, chord diagrams). The music theory logic is now in ESM modules under `src/lib`.
+
+- Entry: `index.html` + `src/main.tsx` + `src/App.tsx`
+- Theory: `src/lib/theory.ts` (init + getScale + buildChord + generateProgressions)
+- Config: `src/lib/config.ts` (loads JSON files)
+- Components: `src/components/*.tsx`
+- Audio: Tone (npm) via `src/lib/audio.ts`
+- i18n: i18next + react-i18next via `src/i18n.ts`
+
+### Develop
+
+- npm install
+- npm run dev
+- Open the local URL that Vite prints
+
+Note: The TypeScript toolchain is configured in `tsconfig.json`. Vite builds and serves TS/TSX without extra plugins.
+## Deployment (GitHub Pages)
+
+A ready-to-use GitHub Actions workflow is included to build and publish the app to GitHub Pages.
+
+- Workflow: `.github/workflows/deploy.yml`
+- Triggers: push to `main`/`master` or manual dispatch
+- Steps: install → test → build → upload artifact → deploy
+
+Notes:
+- Vite is configured with `base: './'` (see `vite.config.ts`) so the app works under a subpath.
+- In your repo settings, enable GitHub Pages → "Build and deployment" → "GitHub Actions".
+- The workflow publishes the `dist` folder to Pages.
