@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { initTheory, getScale, buildChord, generateProgressions, getBassNotes, getChordName } from './theory'
-import scales from '../../config/scales.json'
-import chords from '../../config/chords.json'
-import progressions from '../../config/progressions.json'
-import circle from '../../config/circleOfFifths.json'
+import scales from '../../public/config/scales.json'
+import chords from '../../public/config/chords.json'
+import progressions from '../../public/config/progressions.json'
+import circle from '../../public/config/circleOfFifths.json'
 
 beforeAll(() => {
   initTheory({
