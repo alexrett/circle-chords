@@ -37,4 +37,4 @@ __pycache__/
 
 # Exclude audio/Tone.js from ignore (for offline Tone.js)
 !audio/Tone.js
-
+node_modules

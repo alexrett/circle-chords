@@ -1,81 +1,18 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="app.title">Генератор аккордовых последовательностей для гитары</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1 data-i18n="app.header">🎸 Генератор аккордовых последовательностей</h1>
-        </header>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guitar Progression Generator (React)</title>
+    
+  </head>
+  <body>
+    <div id="root"></div>
 
-        <div class="controls">
-            <div class="control-group">
-                <label for="language-select" data-i18n="controls.language">Язык:</label>
-                <select id="language-select">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label for="key-select" data-i18n="controls.key">Тональность:</label>
-                <select id="key-select">
-                    <option value="C">C (<span data-i18n="notes.C">До</span>)</option>
-                    <option value="C#">C# (<span data-i18n="notes.C#">До#</span>)</option>
-                    <option value="D">D (<span data-i18n="notes.D">Ре</span>)</option>
-                    <option value="D#">D# (<span data-i18n="notes.D#">Ре#</span>)</option>
-                    <option value="E">E (<span data-i18n="notes.E">Ми</span>)</option>
-                    <option value="F">F (<span data-i18n="notes.F">Фа</span>)</option>
-                    <option value="F#">F# (<span data-i18n="notes.F#">Фа#</span>)</option>
-                    <option value="G">G (<span data-i18n="notes.G">Соль</span>)</option>
-                    <option value="G#">G# (<span data-i18n="notes.G#">Соль#</span>)</option>
-                    <option value="A">A (<span data-i18n="notes.A">Ля</span>)</option>
-                    <option value="A#">A# (<span data-i18n="notes.A#">Ля#</span>)</option>
-                    <option value="B">B (<span data-i18n="notes.B">Си</span>)</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label for="mode-select" data-i18n="controls.mode">Лад:</label>
-                <select id="mode-select">
-                    <option value="major" data-i18n="modes.major">Мажор</option>
-                    <option value="minor" data-i18n="modes.minor">Минор</option>
-                    <option value="dorian" data-i18n="modes.dorian">Дорийский</option>
-                    <option value="mixolydian" data-i18n="modes.mixolydian">Миксолидийский</option>
-                    <option value="lydian" data-i18n="modes.lydian">Лидийский</option>
-                </select>
-            </div>
-
-            <div id="interactive-circle-container"></div>
-
-<!--            <button id="generate-btn" data-i18n="controls.generate">Сгенерировать</button>-->
-        </div>
-
-        <div class="results">
-            <div class="progressions" id="progressions"></div>
-            <div class="visualization" id="visualization"></div>
-            <div class="bass-notes" id="bass-notes"></div>
-            <div class="bass-fretboard" id="bass-fretboard"></div>
-            <div class="bass-note-list" id="bass-note-list"></div>
-            <div class="vocal-fretboard" id="vocal-fretboard"></div>
-            <div class="vocal-note-list" id="vocal-note-list"></div>
-        </div>
-    </div>
-
-    <!-- Подключение модулей -->
-    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
-    <script src="i18n/translations.js"></script>
-    <script src="config/configLoader.js"></script>
-    <script src="theory/scales.js"></script>
-    <script src="theory/chords.js"></script>
-    <script src="theory/progressions.js"></script>
-    <script src="theory/circleOfFifths.js"></script>
-    <script src="guitar/fretboard.js"></script>
-    <script src="audio/chordPlayer.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    <!-- Legacy libs and modules kept for gradual migration -->
+    
+    
+    <!-- React entry -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+  </html>
