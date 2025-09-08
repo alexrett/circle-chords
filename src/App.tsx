@@ -69,8 +69,8 @@ export default function App() {
 
   return (
     <div className="max-w-[1100px] mx-auto p-3 sm:p-4">
-      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
-        <h1 className="m-0 text-lg sm:text-xl font-semibold">{t('app.title') || 'Guitar Progression Generator'}</h1>
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-cyan-500/10 rounded-xl p-3">
+        <h1 className="m-0 text-lg sm:text-xl font-semibold text-indigo-700 drop-shadow-sm">{t('app.title') || 'Guitar Progression Generator'}</h1>
         <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
       </header>
 

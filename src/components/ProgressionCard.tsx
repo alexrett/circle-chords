@@ -50,33 +50,34 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
   const scaleNotes = useMemo(() => getScale(keySig, mode), [keySig, mode, getScale])
 
   return (
-    <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
-      <h3 className="text-lg font-semibold m-0">{titleText}</h3>
+    <div className="mt-6 p-4 border border-indigo-100 rounded-xl shadow-md bg-white/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+      <h3 className="text-lg font-semibold m-0 text-fuchsia-700">{titleText}</h3>
       {descriptionText && (
         <p className="mb-4 text-gray-600">{descriptionText}</p>
       )}
 
-      <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2">
+      <div className="flex overflow-x-auto pb-2 -mx-2 px-2">
         {progression.chords.map((chord, idx) => (
-          <div key={idx} className="flex-shrink-0 flex flex-col items-center mx-2 min-w-[140px]">
-            <div className="font-medium">{chord.name}</div>
-            <ChordDiagram
-              chordName={chord.name}
-              variations={guitarChords[chord.name] || []}
-              onPlay={async () => {
-                await chordPlayer.playChord(chord.notes)
-              }}
-            />
+          <div key={idx} className="flex-shrink-0 mx-2 min-w-[180px]">
+            <div className="rounded-xl p-3 shadow-sm bg-white border border-gray-200 flex flex-col items-center">
+              <ChordDiagram
+                chordName={chord.name}
+                variations={guitarChords[chord.name] || []}
+                onPlay={async () => {
+                  await chordPlayer.playChord(chord.notes)
+                }}
+              />
+            </div>
           </div>
         ))}
       </div>
 
       <div className="flex gap-2 flex-wrap mt-2">
-        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700" onClick={async () => {
+        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
           await chordPlayer.playProgression(progression.chords)
         }}>{t('progressions.playProgression') || 'Play progression'}</button>
 
-        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-emerald-600 text-white px-3 py-2 hover:bg-emerald-700" onClick={async () => {
+        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-3 py-2 hover:from-emerald-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400" onClick={async () => {
           await chordPlayer.playFullArrangement(
             progression.chords,
             bassNotes,

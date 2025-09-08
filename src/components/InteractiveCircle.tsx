@@ -53,7 +53,7 @@ export default function InteractiveCircle({ keyValue: keySig, modeValue: mode, o
       <h4 className="my-2 text-sm text-gray-600">{t('circle.clickToChange') || 'Click to change key'}</h4>
       <svg
         viewBox={`0 0 ${size} ${size}`}
-        className="circle-of-fifths interactive-circle w-full max-w-[280px] md:max-w-[320px] h-auto"
+        className="circle-of-fifths interactive-circle w-full max-w-[280px] md:max-w-[320px] h-auto drop-shadow-md bg-white/80 rounded-xl"
         role="img"
         aria-label={t('circle.clickToChange') as string}
       >

@@ -67,7 +67,7 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
       <h4 className="my-2 text-sm text-gray-700">{circleTitle}</h4>
       <svg
         viewBox={`0 0 ${size} ${size}`}
-        className="circle-of-fifths w-full max-w-[340px] md:max-w-[420px] h-auto"
+        className="circle-of-fifths w-full max-w-[340px] md:max-w-[420px] h-auto drop-shadow-md bg-white/80 rounded-xl"
         role="img"
         aria-label={String(circleTitle)}
       >
