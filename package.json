@@ -18,7 +18,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.2.2",
-    "tone": "^14.8.49"
+    "tone": "^14.8.49",
+    "soundfont-player": "^0.12.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
