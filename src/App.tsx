@@ -8,7 +8,7 @@ import { loadAllConfig } from './lib/config'
 import { initTheory, generateProgressions as gen, getScale } from './lib/theory'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-import { ensureAudio, isAudioRunning } from './lib/audio'
+import { ensureAudio, isAudioRunning, setupAutoUnlock } from './lib/audio'
 
 const DEFAULT_NOTES = [
   'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
@@ -69,6 +69,11 @@ export default function App() {
       console.error('Failed to generate progressions:', e)
     }
   }, [ready, keySig, mode])
+
+  // Attach one-time auto-unlock listeners for mobile browsers
+  useEffect(() => {
+    setupAutoUnlock()
+  }, [])
 
   // Persist UI toggles
   useEffect(() => {

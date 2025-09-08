@@ -162,3 +162,45 @@ export function isAudioRunning(): boolean {
 export async function ensureAudio() {
   try { await Tone.start() } catch {}
 }
+
+let autoUnlockAttached = false
+let unlocked = false
+
+export function unlockOnGesture() {
+  try {
+    // call without awaiting to keep within the gesture frame
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    Tone.start()
+    // produce a minimal inaudible tick to satisfy strict iOS policies
+    try {
+      const g = new Tone.Gain(0).toDestination()
+      const osc = new Tone.Oscillator(440).connect(g)
+      osc.start()
+      osc.stop('+0.01')
+    } catch {}
+    // prepare nodes
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    chordPlayer.initialize()
+    unlocked = true
+  } catch {}
+}
+
+export function setupAutoUnlock() {
+  if (autoUnlockAttached) return
+  autoUnlockAttached = true
+  const handler = () => {
+    if (unlocked) return cleanup()
+    unlockOnGesture()
+    cleanup()
+  }
+  const cleanup = () => {
+    window.removeEventListener('pointerdown', handler)
+    window.removeEventListener('touchstart', handler)
+    window.removeEventListener('mousedown', handler)
+    window.removeEventListener('keydown', handler)
+  }
+  window.addEventListener('pointerdown', handler, { once: true, passive: true })
+  window.addEventListener('touchstart', handler, { once: true, passive: true })
+  window.addEventListener('mousedown', handler, { once: true })
+  window.addEventListener('keydown', handler, { once: true })
+}
