@@ -13,7 +13,9 @@
       "hideCircle": "Скрыть круг",
       "fretboards": "Грифы",
       "showFretboards": "Показать грифы",
-      "hideFretboards": "Скрыть грифы"
+      "hideFretboards": "Скрыть грифы",
+      "enableAudio": "Включить звук",
+      "enableAudioHint": "Нажмите, чтобы включить звук (на мобильных устройствах требуется жест пользователя)."
     },
     "controls": {
       "key": "Тональность:",
@@ -113,7 +115,9 @@
       "hideCircle": "Hide circle",
       "fretboards": "Fretboards",
       "showFretboards": "Show fretboards",
-      "hideFretboards": "Hide fretboards"
+      "hideFretboards": "Hide fretboards",
+      "enableAudio": "Enable audio",
+      "enableAudioHint": "Tap to enable audio (mobile devices may require a user gesture)."
     },
     "controls": {
       "key": "Key:",

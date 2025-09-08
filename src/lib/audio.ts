@@ -7,38 +7,44 @@ export class ChordPlayer {
   private initialized = false
 
   async initialize() {
-    if (this.initialized) return
+    // Always try to unlock/resume the audio context on user gesture
+    try { await Tone.start() } catch {}
 
-    // Poly synth for chords
-    this.synth = new Tone.PolySynth(Tone.Synth)
-    this.synth.set({
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.01, decay: 0.3, sustain: 0.2, release: 2.5 },
-    })
-    const reverb = new Tone.Reverb({ decay: 2, wet: 0.3 })
-    const compressor = new Tone.Compressor({ threshold: -24, ratio: 8, attack: 0.003, release: 0.1 })
-    this.synth.chain(compressor, reverb, Tone.Destination)
+    if (!this.synth) {
+      // Poly synth for chords
+      this.synth = new Tone.PolySynth(Tone.Synth)
+      this.synth.set({
+        oscillator: { type: 'triangle' },
+        envelope: { attack: 0.01, decay: 0.3, sustain: 0.2, release: 2.5 },
+      })
+      const reverb = new Tone.Reverb({ decay: 2, wet: 0.3 })
+      const compressor = new Tone.Compressor({ threshold: -24, ratio: 8, attack: 0.003, release: 0.1 })
+      this.synth.chain(compressor, reverb, Tone.Destination)
+    }
 
-    // Mono synth for bass
-    this.bassSynth = new Tone.MonoSynth({
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.02, decay: 0.4, sustain: 0.3, release: 1.2 },
-    })
-    const bassDistortion = new Tone.Distortion(0.4)
-    const bassCompressor = new Tone.Compressor(-18, 4)
-    // set low-pass filter cutoff for bass
-    this.bassSynth.filter.frequency.value = 200
-    this.bassSynth.chain(bassDistortion, bassCompressor, Tone.Destination)
+    if (!this.bassSynth) {
+      // Mono synth for bass
+      this.bassSynth = new Tone.MonoSynth({
+        oscillator: { type: 'triangle' },
+        envelope: { attack: 0.02, decay: 0.4, sustain: 0.3, release: 1.2 },
+      })
+      const bassDistortion = new Tone.Distortion(0.4)
+      const bassCompressor = new Tone.Compressor(-18, 4)
+      // set low-pass filter cutoff for bass
+      this.bassSynth.filter.frequency.value = 200
+      this.bassSynth.chain(bassDistortion, bassCompressor, Tone.Destination)
+    }
 
-    // Simple synth for lead/vocal
-    this.vocalSynth = new Tone.Synth({
-      oscillator: { type: 'sine' },
-      envelope: { attack: 0.05, decay: 0.2, sustain: 0.7, release: 0.8 }
-    })
-    const chorus = new Tone.Chorus({ frequency: 4, delayTime: 2.5, depth: 0.5 }).start()
-    this.vocalSynth.chain(chorus, Tone.Destination)
+    if (!this.vocalSynth) {
+      // Simple synth for lead/vocal
+      this.vocalSynth = new Tone.Synth({
+        oscillator: { type: 'sine' },
+        envelope: { attack: 0.05, decay: 0.2, sustain: 0.7, release: 0.8 }
+      })
+      const chorus = new Tone.Chorus({ frequency: 4, delayTime: 2.5, depth: 0.5 }).start()
+      this.vocalSynth.chain(chorus, Tone.Destination)
+    }
 
-    await Tone.start()
     this.initialized = true
   }
 
@@ -143,3 +149,16 @@ export class ChordPlayer {
 }
 
 export const chordPlayer = new ChordPlayer()
+
+export function isAudioRunning(): boolean {
+  try {
+    // @ts-ignore
+    return Tone.getContext().rawContext?.state === 'running' || Tone.getContext().state === 'running'
+  } catch {
+    return false
+  }
+}
+
+export async function ensureAudio() {
+  try { await Tone.start() } catch {}
+}

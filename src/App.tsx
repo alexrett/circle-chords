@@ -8,7 +8,7 @@ import { loadAllConfig } from './lib/config'
 import { initTheory, generateProgressions as gen, getScale } from './lib/theory'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-// audio handlers are imported where used
+import { ensureAudio, isAudioRunning } from './lib/audio'
 
 const DEFAULT_NOTES = [
   'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
@@ -33,6 +33,7 @@ export default function App() {
   const [showFretboards, setShowFretboards] = useState<boolean>(() => {
     try { const v = localStorage.getItem('ui.showFretboards'); return v ? v === '1' || v === 'true' : true } catch { return true }
   })
+  const [audioUnlocked, setAudioUnlocked] = useState<boolean>(() => isAudioRunning())
 
   // Initialize config + theory
   useEffect(() => {
@@ -93,6 +94,20 @@ export default function App() {
         <h1 className="m-0 text-lg sm:text-xl font-semibold text-indigo-700 drop-shadow-sm">{t('app.title') || 'Guitar Progression Generator'}</h1>
         <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
       </header>
+
+      {!audioUnlocked && (
+        <div className="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-between gap-3">
+          <div className="text-sm">
+            {t('ui.enableAudioHint') || 'Tap to enable audio (mobile devices may require a user gesture).'}
+          </div>
+          <button
+            className="inline-flex items-center gap-2 rounded bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700 text-sm"
+            onClick={async () => { await ensureAudio(); setAudioUnlocked(isAudioRunning()) }}
+          >
+            {t('ui.enableAudio') || 'Enable audio'}
+          </button>
+        </div>
+      )}
 
       <section className="mt-4">
         <KeyModeSelector
