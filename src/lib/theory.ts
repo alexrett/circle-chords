@@ -31,9 +31,11 @@ export function getChordName(root: Note, chordType: string): string {
     case 'major': return root
     case 'minor': return `${root}m`
     case 'dim': return `${root}dim`
+    case 'dim7': return `${root}dim7`
     case 'maj7': return `${root}maj7`
     case 'min7': return `${root}m7`
     case 'dom7': return `${root}7`
+    case 'm7b5': return `${root}m7b5`
     default: return `${root}${chordType}`
   }
 }
@@ -61,4 +63,3 @@ export function generateProgressions(key: Note, mode: string): GeneratedProgress
 export function getBassNotes(chords: GeneratedChord[]) {
   return chords.map(c => ({ chord: c.name, bassNote: c.root, alternatives: c.notes }))
 }
-
