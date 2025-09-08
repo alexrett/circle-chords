@@ -56,12 +56,16 @@ export default function ChordDiagram({ chordName, variations, onPlay }: { chordN
   const { t } = useTranslation()
   return (
     <div className="space-y-2">
-      <button className="inline-flex items-center gap-2 rounded bg-slate-600 text-white px-2 py-1 hover:bg-slate-700 text-sm" title={`${t('progressions.playChord') || 'Play'} ${chordName}`} onClick={onPlay}>
+      <button className="inline-flex items-center gap-2 rounded bg-slate-600 text-white px-3 py-2 hover:bg-slate-700 text-sm" title={`${t('progressions.playChord') || 'Play'} ${chordName}`} onClick={onPlay}>
         {(t('progressions.playChord') as string || 'Play') + ' ' + chordName}
       </button>
-      {variations.map((v, i) => (
-        <Variation key={i} variation={v} />
-      ))}
+      <div className="overflow-x-auto">
+        <div className="min-w-[160px]">
+          {variations.map((v, i) => (
+            <Variation key={i} variation={v} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

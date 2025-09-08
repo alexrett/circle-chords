@@ -65,7 +65,12 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
   return (
     <div className="circle-container">
       <h4 className="my-2 text-sm text-gray-700">{circleTitle}</h4>
-      <svg width={size} height={size} className="circle-of-fifths">
+      <svg
+        viewBox={`0 0 ${size} ${size}`}
+        className="circle-of-fifths w-full max-w-[340px] md:max-w-[420px] h-auto"
+        role="img"
+        aria-label={String(circleTitle)}
+      >
         <circle cx={cx} cy={cy} r={outer + 10} fill="#f8f9fa" stroke="#dee2e6" strokeWidth={2} />
         {angles.map((a, i) => {
           const a1 = a - Math.PI / 12

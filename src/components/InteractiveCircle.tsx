@@ -51,7 +51,12 @@ export default function InteractiveCircle({ keyValue: keySig, modeValue: mode, o
   return (
     <div className="interactive-circle-container">
       <h4 className="my-2 text-sm text-gray-600">{t('circle.clickToChange') || 'Click to change key'}</h4>
-      <svg width={size} height={size} className="circle-of-fifths interactive-circle">
+      <svg
+        viewBox={`0 0 ${size} ${size}`}
+        className="circle-of-fifths interactive-circle w-full max-w-[280px] md:max-w-[320px] h-auto"
+        role="img"
+        aria-label={t('circle.clickToChange') as string}
+      >
         <circle cx={cx} cy={cy} r={outer + 5} fill="#f8f9fa" stroke="#dee2e6" strokeWidth="2" />
         {angles.map((a, i) => {
           const a1 = a - Math.PI / 12

@@ -68,9 +68,9 @@ export default function App() {
   const { t, i18n } = useTranslation()
 
   return (
-    <div className="max-w-[1100px] mx-auto p-4">
-      <header className="flex items-center justify-between gap-3">
-        <h1 className="m-0 text-xl font-semibold">{t('app.title') || 'Guitar Progression Generator'}</h1>
+    <div className="max-w-[1100px] mx-auto p-3 sm:p-4">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+        <h1 className="m-0 text-lg sm:text-xl font-semibold">{t('app.title') || 'Guitar Progression Generator'}</h1>
         <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
       </header>
 

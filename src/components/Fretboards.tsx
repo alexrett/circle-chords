@@ -23,23 +23,25 @@ export function BassFretboard({ notes, title, notesList = DEFAULT_NOTES }: { not
   const openStrings = ['E', 'A', 'D', 'G']
   const numFrets = 12
   return (
-    <div className="inline-block border rounded p-2 mb-2 overflow-x-auto bg-white">
-      {title && (
-        <div className="font-bold mb-1">{title}</div>
-      )}
-      <FretHeader numFrets={numFrets} />
-      {openStrings.map((open) => (
-        <div key={open} className="flex items-center">
-          <div className="w-10 font-semibold text-xs">{open}</div>
-          {Array.from({ length: numFrets + 1 }, (_, f) => {
-            const note = getNoteOnString(open, f, notesList)
-            const highlight = notes.includes(note)
-            return (
-              <div key={f} className={`w-10 text-center text-xs border rounded ${highlight ? 'bg-yellow-200 font-semibold' : ''}`}>{note}</div>
-            )
-          })}
-        </div>
-      ))}
+    <div className="w-full overflow-x-auto">
+      <div className="inline-block border rounded p-2 mb-2 bg-white min-w-[640px]">
+        {title && (
+          <div className="font-bold mb-1">{title}</div>
+        )}
+        <FretHeader numFrets={numFrets} />
+        {openStrings.map((open) => (
+          <div key={open} className="flex items-center">
+            <div className="w-10 font-semibold text-xs">{open}</div>
+            {Array.from({ length: numFrets + 1 }, (_, f) => {
+              const note = getNoteOnString(open, f, notesList)
+              const highlight = notes.includes(note)
+              return (
+                <div key={f} className={`w-10 text-center text-xs border rounded ${highlight ? 'bg-yellow-200 font-semibold' : ''}`}>{note}</div>
+              )
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -48,23 +50,25 @@ export function VocalFretboard({ notes, title, notesList = DEFAULT_NOTES }: { no
   const openStrings = ['E', 'A', 'D', 'G', 'B', 'E']
   const numFrets = 12
   return (
-    <div className="inline-block border rounded p-2 mb-2 overflow-x-auto bg-white">
-      {title && (
-        <div className="font-bold mb-1">{title}</div>
-      )}
-      <FretHeader numFrets={numFrets} />
-      {openStrings.map((open, idx) => (
-        <div key={`${open}-${idx}`} className="flex items-center">
-          <div className="w-10 font-semibold text-xs">{open}</div>
-          {Array.from({ length: numFrets + 1 }, (_, f) => {
-            const note = getNoteOnString(open, f, notesList)
-            const highlight = notes.includes(note)
-            return (
-              <div key={f} className={`w-10 text-center text-xs border rounded ${highlight ? 'bg-yellow-200 font-semibold' : ''}`}>{note}</div>
-            )
-          })}
-        </div>
-      ))}
+    <div className="w-full overflow-x-auto">
+      <div className="inline-block border rounded p-2 mb-2 bg-white min-w-[640px]">
+        {title && (
+          <div className="font-bold mb-1">{title}</div>
+        )}
+        <FretHeader numFrets={numFrets} />
+        {openStrings.map((open, idx) => (
+          <div key={`${open}-${idx}`} className="flex items-center">
+            <div className="w-10 font-semibold text-xs">{open}</div>
+            {Array.from({ length: numFrets + 1 }, (_, f) => {
+              const note = getNoteOnString(open, f, notesList)
+              const highlight = notes.includes(note)
+              return (
+                <div key={f} className={`w-10 text-center text-xs border rounded ${highlight ? 'bg-yellow-200 font-semibold' : ''}`}>{note}</div>
+              )
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

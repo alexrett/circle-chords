@@ -56,9 +56,9 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
         <p className="mb-4 text-gray-600">{descriptionText}</p>
       )}
 
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2">
         {progression.chords.map((chord, idx) => (
-          <div key={idx} className="flex flex-col items-center mx-2">
+          <div key={idx} className="flex-shrink-0 flex flex-col items-center mx-2 min-w-[140px]">
             <div className="font-medium">{chord.name}</div>
             <ChordDiagram
               chordName={chord.name}
@@ -72,11 +72,11 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
       </div>
 
       <div className="flex gap-2 flex-wrap mt-2">
-        <button className="inline-flex items-center gap-2 rounded bg-indigo-600 text-white px-3 py-1.5 hover:bg-indigo-700" onClick={async () => {
+        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700" onClick={async () => {
           await chordPlayer.playProgression(progression.chords)
         }}>{t('progressions.playProgression') || 'Play progression'}</button>
 
-        <button className="inline-flex items-center gap-2 rounded bg-emerald-600 text-white px-3 py-1.5 hover:bg-emerald-700" onClick={async () => {
+        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-emerald-600 text-white px-3 py-2 hover:bg-emerald-700" onClick={async () => {
           await chordPlayer.playFullArrangement(
             progression.chords,
             bassNotes,
