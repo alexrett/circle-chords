@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { buildChord } from '../lib/theory'
-import { chordPlayer, unlockOnGesture } from '../lib/audio'
+import { sfChordPlayer } from '../lib/audio-sf'
 
 function polarToCartesian(cx: number, cy: number, r: number, angle: number): [number, number] {
   return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)]
@@ -54,11 +54,10 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
 
   const onSectorClick = async (isMajor: boolean, i: number) => {
     try {
-      if (!chordPlayer) return
-      unlockOnGesture()
+      await sfChordPlayer.initialize()
       const root = isMajor ? majorKeys[i] : (minorKeys[i] || '').replace('m', '')
       const notes = buildChord(root, isMajor ? 'major' : 'minor')
-      await chordPlayer.playChord(notes)
+      await sfChordPlayer.playChord(notes)
     } catch (e) {
       console.error('Play sector chord failed', e)
     }

@@ -8,7 +8,7 @@ import { loadAllConfig } from './lib/config'
 import { initTheory, generateProgressions as gen, getScale } from './lib/theory'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-import { ensureAudio, isAudioRunning, setupAutoUnlock } from './lib/audio'
+import { ensureAudio, isAudioRunning, setupAutoUnlock } from './lib/audio-sf'
 
 const DEFAULT_NOTES = [
   'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'

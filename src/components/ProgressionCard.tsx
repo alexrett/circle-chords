@@ -4,7 +4,7 @@ import ChordDiagram from './ChordDiagram'
 import CircleWrapper from './CircleWrapper'
 import { BassFretboard, VocalFretboard, NoteList } from './Fretboards'
 import type { GuitarChordVariation, GeneratedProgression } from '../lib/types'
-import { chordPlayer, unlockOnGesture } from '../lib/audio'
+import { sfChordPlayer } from '../lib/audio-sf'
 import { getBassNotes as getBass } from '../lib/theory'
 
 export default function ProgressionCard({ progression, keySig, mode, majorKeys = [], minorKeys = [], notesList, getScale, guitarChords, showDiagrams, showCircle, showFretboards }: {
@@ -68,8 +68,8 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
                   chordName={chord.name}
                   variations={guitarChords[chord.name] || []}
                   onPlay={async () => {
-                    unlockOnGesture()
-                    await chordPlayer.playChord(chord.notes)
+                    await sfChordPlayer.initialize()
+                    await sfChordPlayer.playChord(chord.notes)
                   }}
                 />
               </div>
@@ -88,13 +88,13 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
 
       <div className="flex gap-2 flex-wrap mt-2">
         <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
-          unlockOnGesture()
-          await chordPlayer.playProgression(progression.chords)
+          await sfChordPlayer.initialize()
+          await sfChordPlayer.playProgression(progression.chords)
         }}>{t('progressions.playProgression') || 'Play progression'}</button>
 
         <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-3 py-2 hover:from-emerald-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400" onClick={async () => {
-          unlockOnGesture()
-          await chordPlayer.playFullArrangement(
+          await sfChordPlayer.initialize()
+          await sfChordPlayer.playFullArrangement(
             progression.chords,
             bassNotes,
             scaleNotes
