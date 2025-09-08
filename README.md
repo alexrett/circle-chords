@@ -250,3 +250,15 @@ The app has been refactored to a React + Vite setup with TypeScript. Legacy DOM-
 - Open the local URL that Vite prints
 
 Note: The TypeScript toolchain is configured in `tsconfig.json`. Vite builds and serves TS/TSX without extra plugins.
+## Deployment (GitHub Pages)
+
+A ready-to-use GitHub Actions workflow is included to build and publish the app to GitHub Pages.
+
+- Workflow: `.github/workflows/deploy.yml`
+- Triggers: push to `main`/`master` or manual dispatch
+- Steps: install → test → build → upload artifact → deploy
+
+Notes:
+- Vite is configured with `base: './'` (see `vite.config.ts`) so the app works under a subpath.
+- In your repo settings, enable GitHub Pages → "Build and deployment" → "GitHub Actions".
+- The workflow publishes the `dist` folder to Pages.
