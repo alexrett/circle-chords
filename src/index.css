@@ -7,5 +7,5 @@ html, body, #root {
   height: 100%;
 }
 body {
-  @apply bg-gradient-to-br from-indigo-50 via-purple-50 to-cyan-50 text-gray-800;
+  @apply bg-indigo-50 text-gray-800;
 }

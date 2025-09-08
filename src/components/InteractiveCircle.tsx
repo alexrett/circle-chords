@@ -31,9 +31,10 @@ export default function InteractiveCircle({ keyValue: keySig, modeValue: mode, o
   const size = 200
   const cx = size / 2
   const cy = size / 2
-  const outer = 80
-  const inner = 55
-  const mid = 67.5
+  // Thicker rings for better text fit
+  const outer = 92
+  const inner = 42
+  const mid = 68
   const angles = Array.from({ length: 12 }, (_, i) => ((i * 30 - 90) * Math.PI) / 180)
   const { t } = useTranslation()
 
@@ -83,12 +84,12 @@ export default function InteractiveCircle({ keyValue: keySig, modeValue: mode, o
               <path d={minorPath} fill={minorFill} stroke="#dee2e6" strokeWidth={1} style={{ cursor: 'pointer' }}
                     onClick={() => onTonalityChange(min, 'minor')} />
               <text x={majorTextPos[0]} y={majorTextPos[1]} textAnchor="middle" dominantBaseline="middle"
-                    fontFamily="Arial, sans-serif" fontSize={10} fontWeight="bold"
+                    fontFamily="Arial, sans-serif" fontSize={11} fontWeight="bold"
                     fill={isMajCurrent ? 'white' : '#495057'}
                     style={{ cursor: 'pointer' }}
                     onClick={() => onTonalityChange(maj, 'major')}>{maj}</text>
               <text x={minorTextPos[0]} y={minorTextPos[1]} textAnchor="middle" dominantBaseline="middle"
-                    fontFamily="Arial, sans-serif" fontSize={8}
+                    fontFamily="Arial, sans-serif" fontSize={9}
                     fill={isMinCurrent ? 'white' : '#6c757d'}
                     style={{ cursor: 'pointer' }}
                     onClick={() => onTonalityChange(min, 'minor')}>{minorKeys[i]}</text>
@@ -96,9 +97,9 @@ export default function InteractiveCircle({ keyValue: keySig, modeValue: mode, o
           )
         })}
         <text x={cx} y={cy - 5} textAnchor="middle" dominantBaseline="middle"
-              fontFamily="Arial, sans-serif" fontSize={12} fontWeight="bold" fill="#495057">{keySig}</text>
+              fontFamily="Arial, sans-serif" fontSize={13} fontWeight="bold" fill="#495057">{keySig}</text>
         <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="middle"
-              fontFamily="Arial, sans-serif" fontSize={8} fill="#6c757d">{t(`circle.${mode}`) || mode}</text>
+              fontFamily="Arial, sans-serif" fontSize={9} fill="#6c757d">{t(`circle.${mode}`) || mode}</text>
       </svg>
     </div>
   )

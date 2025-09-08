@@ -30,12 +30,13 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
   majorKeys?: string[]
   minorKeys?: string[]
 }) {
-  const size = 300
+  const size = 320
   const cx = size / 2
   const cy = size / 2
-  const outer = 120
-  const inner = 80
-  const mid = 100
+  // Thicker rings for better text fit
+  const outer = 145
+  const inner = 65
+  const mid = 105
   const angles = Array.from({ length: 12 }, (_, i) => ((i * 30 - 90) * Math.PI) / 180)
   const { t } = useTranslation()
 
@@ -101,12 +102,12 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
                     style={{ cursor: isMinIn ? 'pointer' : 'default' }}
                     onClick={() => isMinIn && onSectorClick(false, i)} />
               <text x={majorTextPos[0]} y={majorTextPos[1]} textAnchor="middle" dominantBaseline="middle"
-                    fontFamily="Arial, sans-serif" fontSize={10} fontWeight="bold"
+                    fontFamily="Arial, sans-serif" fontSize={12} fontWeight="bold"
                     fill={isMajCurrent ? 'white' : '#495057'}
                     style={{ cursor: isMajIn ? 'pointer' : 'default' }}
                     onClick={() => isMajIn && onSectorClick(true, i)}>{maj}</text>
               <text x={minorTextPos[0]} y={minorTextPos[1]} textAnchor="middle" dominantBaseline="middle"
-                    fontFamily="Arial, sans-serif" fontSize={8}
+                    fontFamily="Arial, sans-serif" fontSize={10}
                     fill={isMinCurrent ? 'white' : '#6c757d'}
                     style={{ cursor: isMinIn ? 'pointer' : 'default' }}
                     onClick={() => isMinIn && onSectorClick(false, i)}>{minorKeys[i]}</text>
@@ -114,9 +115,9 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
           )
         })}
         <text x={cx} y={cy - 5} textAnchor="middle" dominantBaseline="middle"
-              fontFamily="Arial, sans-serif" fontSize={12} fontWeight="bold" fill="#495057">{keySig}</text>
+              fontFamily="Arial, sans-serif" fontSize={14} fontWeight="bold" fill="#495057">{keySig}</text>
         <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="middle"
-              fontFamily="Arial, sans-serif" fontSize={10} fill="#6c757d">{t('circle.circleTitle') || 'Chord progression'}</text>
+              fontFamily="Arial, sans-serif" fontSize={12} fill="#6c757d">{t('circle.circleTitle') || 'Chord progression'}</text>
       </svg>
     </div>
   )
