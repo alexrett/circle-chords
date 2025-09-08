@@ -55,6 +55,8 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName: _
   const onSectorClick = async (isMajor: boolean, i: number) => {
     try {
       if (!chordPlayer) return
+      const { ensureAudio } = await import('../lib/audio')
+      await ensureAudio()
       const root = isMajor ? majorKeys[i] : (minorKeys[i] || '').replace('m', '')
       const notes = buildChord(root, isMajor ? 'major' : 'minor')
       await chordPlayer.playChord(notes)

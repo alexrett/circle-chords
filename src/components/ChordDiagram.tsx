@@ -83,7 +83,7 @@ export default function ChordDiagram({ chordName, variations, onPlay }: { chordN
       <button
         className="inline-flex w-full font-bold justify-center items-center gap-2 rounded border border-gray-300 bg-white text-gray-800 px-3 py-2 hover:bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
         title={`${t('progressions.playChord') || 'Play'} ${chordName}`}
-        onClick={onPlay}
+        onClick={async () => { const { ensureAudio } = await import('../lib/audio'); await ensureAudio(); onPlay && onPlay() }}
       >
         {(t('progressions.playChord') as string || 'Play') + ' ' + chordName}
       </button>
