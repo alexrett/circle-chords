@@ -24,6 +24,15 @@ export default function App() {
   const [circleData, setCircleData] = useState<{ majorKeys: string[]; minorKeys: string[] }>({ majorKeys: [], minorKeys: [] })
   const [modes, setModes] = useState<string[]>(['major', 'minor'])
   const [guitarChords, setGuitarChords] = useState<AppConfig['guitarChords']>({})
+  const [showDiagrams, setShowDiagrams] = useState<boolean>(() => {
+    try { const v = localStorage.getItem('ui.showDiagrams'); return v ? v === '1' || v === 'true' : true } catch { return true }
+  })
+  const [showCircle, setShowCircle] = useState<boolean>(() => {
+    try { const v = localStorage.getItem('ui.showCircle'); return v ? v === '1' || v === 'true' : true } catch { return true }
+  })
+  const [showFretboards, setShowFretboards] = useState<boolean>(() => {
+    try { const v = localStorage.getItem('ui.showFretboards'); return v ? v === '1' || v === 'true' : true } catch { return true }
+  })
 
   // Initialize config + theory
   useEffect(() => {
@@ -60,6 +69,17 @@ export default function App() {
     }
   }, [ready, keySig, mode])
 
+  // Persist UI toggles
+  useEffect(() => {
+    try { localStorage.setItem('ui.showDiagrams', showDiagrams ? '1' : '0') } catch {}
+  }, [showDiagrams])
+  useEffect(() => {
+    try { localStorage.setItem('ui.showCircle', showCircle ? '1' : '0') } catch {}
+  }, [showCircle])
+  useEffect(() => {
+    try { localStorage.setItem('ui.showFretboards', showFretboards ? '1' : '0') } catch {}
+  }, [showFretboards])
+
   const onTonalityChange = (key: string, m: string) => {
     setKeySig(key)
     setMode(m)
@@ -84,6 +104,54 @@ export default function App() {
         />
       </section>
 
+      {/* Global display toggles */}
+      <section className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+        <label className="inline-flex items-center justify-between gap-3 p-2 rounded-lg bg-white/70 border">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{t('ui.chordDiagrams') || 'Chord diagrams'}</span>
+            <span className="text-xs text-gray-500">{showDiagrams ? (t('ui.hideChordDiagrams') || 'Hide chord diagrams') : (t('ui.showChordDiagrams') || 'Show chord diagrams')}</span>
+          </div>
+          <button
+            type="button"
+            aria-pressed={showDiagrams}
+            onClick={() => setShowDiagrams(v => !v)}
+            className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${showDiagrams ? 'bg-indigo-600' : 'bg-gray-300'}`}
+          >
+            <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${showDiagrams ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </label>
+
+        <label className="inline-flex items-center justify-between gap-3 p-2 rounded-lg bg-white/70 border">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{t('ui.circle') || 'Circle'}</span>
+            <span className="text-xs text-gray-500">{showCircle ? (t('ui.hideCircle') || 'Hide circle') : (t('ui.showCircle') || 'Show circle')}</span>
+          </div>
+          <button
+            type="button"
+            aria-pressed={showCircle}
+            onClick={() => setShowCircle(v => !v)}
+            className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${showCircle ? 'bg-indigo-600' : 'bg-gray-300'}`}
+          >
+            <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${showCircle ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </label>
+
+        <label className="inline-flex items-center justify-between gap-3 p-2 rounded-lg bg-white/70 border">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{t('ui.fretboards') || 'Fretboards'}</span>
+            <span className="text-xs text-gray-500">{showFretboards ? (t('ui.hideFretboards') || 'Hide fretboards') : (t('ui.showFretboards') || 'Show fretboards')}</span>
+          </div>
+          <button
+            type="button"
+            aria-pressed={showFretboards}
+            onClick={() => setShowFretboards(v => !v)}
+            className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${showFretboards ? 'bg-indigo-600' : 'bg-gray-300'}`}
+          >
+            <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${showFretboards ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </label>
+      </section>
+
       <section className="mt-4">
         {ready && (
           <InteractiveCircle keyValue={keySig} modeValue={mode} onTonalityChange={onTonalityChange}
@@ -106,6 +174,9 @@ export default function App() {
           notesList={notesList}
           getScale={(k, m) => getScale(k, m)}
           guitarChords={guitarChords}
+          showDiagrams={showDiagrams}
+          showCircle={showCircle}
+          showFretboards={showFretboards}
         />
       ))}
     </div>

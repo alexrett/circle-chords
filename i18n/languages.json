@@ -4,6 +4,17 @@
       "title": "Генератор аккордовых последовательностей для гитары",
       "header": "🎸 Генератор аккордовых последовательностей"
     },
+    "ui": {
+      "chordDiagrams": "Диаграммы аккордов",
+      "showChordDiagrams": "Показать диаграммы аккордов",
+      "hideChordDiagrams": "Скрыть диаграммы аккордов",
+      "circle": "Квинтовый круг",
+      "showCircle": "Показать круг",
+      "hideCircle": "Скрыть круг",
+      "fretboards": "Грифы",
+      "showFretboards": "Показать грифы",
+      "hideFretboards": "Скрыть грифы"
+    },
     "controls": {
       "key": "Тональность:",
       "mode": "Лад:",
@@ -92,6 +103,17 @@
     "app": {
       "title": "Guitar Chord Progression Generator",
       "header": "🎸 Chord Progression Generator"
+    },
+    "ui": {
+      "chordDiagrams": "Chord diagrams",
+      "showChordDiagrams": "Show chord diagrams",
+      "hideChordDiagrams": "Hide chord diagrams",
+      "circle": "Circle of fifths",
+      "showCircle": "Show circle",
+      "hideCircle": "Hide circle",
+      "fretboards": "Fretboards",
+      "showFretboards": "Show fretboards",
+      "hideFretboards": "Hide fretboards"
     },
     "controls": {
       "key": "Key:",

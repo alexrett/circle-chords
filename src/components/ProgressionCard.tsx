@@ -7,7 +7,7 @@ import type { GuitarChordVariation, GeneratedProgression } from '../lib/types'
 import { chordPlayer } from '../lib/audio'
 import { getBassNotes as getBass } from '../lib/theory'
 
-export default function ProgressionCard({ progression, keySig, mode, majorKeys = [], minorKeys = [], notesList, getScale, guitarChords }: {
+export default function ProgressionCard({ progression, keySig, mode, majorKeys = [], minorKeys = [], notesList, getScale, guitarChords, showDiagrams, showCircle, showFretboards }: {
   progression: GeneratedProgression
   keySig: string
   mode: string
@@ -16,6 +16,9 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
   notesList: string[]
   getScale: (k: string, m: string) => string[]
   guitarChords: Record<string, GuitarChordVariation[]>
+  showDiagrams: boolean
+  showCircle: boolean
+  showFretboards: boolean
 }) {
   const { t, i18n } = useTranslation()
 
@@ -56,21 +59,31 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
         <p className="mb-4 text-gray-600">{descriptionText}</p>
       )}
 
-      <div className="flex overflow-x-auto pb-2 -mx-2 px-2">
-        {progression.chords.map((chord, idx) => (
-          <div key={idx} className="flex-shrink-0 mx-2 min-w-[180px]">
-            <div className="rounded-xl p-3 shadow-sm bg-white border border-gray-200 flex flex-col items-center">
-              <ChordDiagram
-                chordName={chord.name}
-                variations={guitarChords[chord.name] || []}
-                onPlay={async () => {
-                  await chordPlayer.playChord(chord.notes)
-                }}
-              />
+      {showDiagrams ? (
+        <div className="flex overflow-x-auto pb-2 -mx-2 px-2">
+          {progression.chords.map((chord, idx) => (
+            <div key={idx} className="flex-shrink-0 mx-2 min-w-[180px]">
+              <div className="rounded-xl p-3 shadow-sm bg-white border border-gray-200 flex flex-col items-center">
+                <ChordDiagram
+                  chordName={chord.name}
+                  variations={guitarChords[chord.name] || []}
+                  onPlay={async () => {
+                    await chordPlayer.playChord(chord.notes)
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-2 mt-1">
+          {progression.chords.map((ch, idx) => (
+            <span key={idx} className="px-2 py-1 rounded-full bg-gray-100 text-gray-800 border border-gray-200 text-sm">
+              {ch.name}
+            </span>
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-2 flex-wrap mt-2">
         <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
@@ -86,20 +99,25 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
         }}>{t('progressions.playFull') || 'Play full arrangement'}</button>
       </div>
 
-      <div className="mt-3">
-        <CircleWrapper keySig={keySig} mode={mode} chords={progression.chords} progressionName={progression.name}
-          majorKeys={majorKeys} minorKeys={minorKeys} />
-      </div>
+      {showCircle && (
+        <div className="mt-3">
+          <CircleWrapper keySig={keySig} mode={mode} chords={progression.chords} progressionName={progression.name}
+            majorKeys={majorKeys} minorKeys={minorKeys} />
+        </div>
+      )}
 
-      <div className="mt-3">
-        <BassFretboard notes={bassNotes} title={t('progressions.bassNotesOnFretboard') || 'Bass notes on fretboard'} notesList={notesList} />
-        <NoteList notes={bassNotes} title={t('progressions.bassNotes') || 'Bass notes'} />
-      </div>
-
-      <div className="mt-3">
-        <VocalFretboard notes={scaleNotes} title={t('progressions.vocalNotesOnFretboard') || 'Vocal notes on fretboard'} notesList={notesList} />
-        <NoteList notes={scaleNotes} title={t('progressions.vocalNotes') || 'Vocal notes'} />
-      </div>
+      {showFretboards && (
+        <>
+          <div className="mt-3">
+            <BassFretboard notes={bassNotes} title={t('progressions.bassNotesOnFretboard') || 'Bass notes on fretboard'} notesList={notesList} />
+            <NoteList notes={bassNotes} title={t('progressions.bassNotes') || 'Bass notes'} />
+          </div>
+          <div className="mt-3">
+            <VocalFretboard notes={scaleNotes} title={t('progressions.vocalNotesOnFretboard') || 'Vocal notes on fretboard'} notesList={notesList} />
+            <NoteList notes={scaleNotes} title={t('progressions.vocalNotes') || 'Vocal notes'} />
+          </div>
+        </>
+      )}
     </div>
   )
 }
