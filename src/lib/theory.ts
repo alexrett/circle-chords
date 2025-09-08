@@ -36,6 +36,9 @@ export function getChordName(root: Note, chordType: string): string {
     case 'min7': return `${root}m7`
     case 'dom7': return `${root}7`
     case 'm7b5': return `${root}m7b5`
+    case 'sus2': return `${root}sus2`
+    case 'sus4': return `${root}sus4`
+    case '7sus4': return `${root}7sus4`
     default: return `${root}${chordType}`
   }
 }

@@ -3,12 +3,13 @@ import LanguageSelector from './components/LanguageSelector'
 import KeyModeSelector from './components/KeyModeSelector'
 import ProgressionCard from './components/ProgressionCard'
 import InteractiveCircle from './components/InteractiveCircle'
+import ChordExplorer from './pages/ChordExplorer'
 import type { AppConfig, GeneratedProgression } from './lib/types'
 import { loadAllConfig } from './lib/config'
 import { initTheory, generateProgressions as gen, getScale } from './lib/theory'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-import { ensureAudio, isAudioRunning, setupAutoUnlock } from './lib/audio-sf'
+import { setupAutoUnlock } from './lib/audio-sf'
 
 const DEFAULT_NOTES = [
   'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
@@ -16,6 +17,7 @@ const DEFAULT_NOTES = [
 
 export default function App() {
   const [ready, setReady] = useState(false)
+  const [page, setPage] = useState<'progressions' | 'chords'>('progressions')
   const [keySig, setKeySig] = useState<string>('C')
   const [mode, setMode] = useState<string>('major')
   const [progressions, setProgressions] = useState<GeneratedProgression[]>([])
@@ -33,7 +35,6 @@ export default function App() {
   const [showFretboards, setShowFretboards] = useState<boolean>(() => {
     try { const v = localStorage.getItem('ui.showFretboards'); return v ? v === '1' || v === 'true' : true } catch { return true }
   })
-  const [audioUnlocked, setAudioUnlocked] = useState<boolean>(() => isAudioRunning())
 
   // Initialize config + theory
   useEffect(() => {
@@ -97,22 +98,24 @@ export default function App() {
     <div className="max-w-[1100px] mx-auto p-3 sm:p-4">
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-cyan-500/10 rounded-xl p-3">
         <h1 className="m-0 text-lg sm:text-xl font-semibold text-indigo-700 drop-shadow-sm">{t('app.title') || 'Guitar Progression Generator'}</h1>
-        <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
-      </header>
-
-      {!audioUnlocked && (
-        <div className="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-between gap-3">
-          <div className="text-sm">
-            {t('ui.enableAudioHint') || 'Tap to enable audio (mobile devices may require a user gesture).'}
-          </div>
-          <button
-            className="inline-flex items-center gap-2 rounded bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700 text-sm"
-            onClick={async () => { await ensureAudio(); setAudioUnlocked(isAudioRunning()) }}
-          >
-            {t('ui.enableAudio') || 'Enable audio'}
-          </button>
+        <div className="flex items-center gap-2">
+          <nav className="inline-flex rounded-lg overflow-hidden border">
+            <button
+              className={`px-3 py-1.5 text-sm ${page === 'progressions' ? 'bg-white text-indigo-700' : 'bg-white/60 text-gray-700'}`}
+              onClick={() => setPage('progressions')}
+            >
+              {t('ui.tabs.progressions') || 'Progressions'}
+            </button>
+            <button
+              className={`px-3 py-1.5 text-sm ${page === 'chords' ? 'bg-white text-indigo-700' : 'bg-white/60 text-gray-700'}`}
+              onClick={() => setPage('chords')}
+            >
+              {t('ui.tabs.chords') || 'Chords'}
+            </button>
+          </nav>
+          <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
         </div>
-      )}
+      </header>
 
       <section className="mt-4">
         <KeyModeSelector
@@ -172,32 +175,44 @@ export default function App() {
         </label>
       </section>
 
-      <section className="mt-4">
-        {ready && (
-          <InteractiveCircle keyValue={keySig} modeValue={mode} onTonalityChange={onTonalityChange}
-            majorKeys={circleData.majorKeys} minorKeys={circleData.minorKeys} />
-        )}
-      </section>
+      {page === 'progressions' && (
+        <section className="mt-4">
+          {ready && (
+            <InteractiveCircle keyValue={keySig} modeValue={mode} onTonalityChange={onTonalityChange}
+              majorKeys={circleData.majorKeys} minorKeys={circleData.minorKeys} />
+          )}
+        </section>
+      )}
 
       {!ready && (
         <p className="text-gray-500">{t('app.loading') || 'Loading...'}</p>
       )}
 
-      {ready && progressions.map((p, idx) => (
-        <ProgressionCard
-          key={idx}
-          progression={p}
-          keySig={keySig}
-          mode={mode}
+      {page === 'progressions' && ready && (
+        progressions.map((p, idx) => (
+          <ProgressionCard
+            key={idx}
+            progression={p}
+            keySig={keySig}
+            mode={mode}
+            majorKeys={circleData.majorKeys}
+            minorKeys={circleData.minorKeys}
+            notesList={notesList}
+            getScale={(k, m) => getScale(k, m)}
+            guitarChords={guitarChords}
+            showDiagrams={showDiagrams}
+            showCircle={showCircle}
+            showFretboards={showFretboards}
+          />
+        ))
+      )}
+
+      {page === 'chords' && ready && (
+        <ChordExplorer
           majorKeys={circleData.majorKeys}
           minorKeys={circleData.minorKeys}
-          notesList={notesList}
-          getScale={(k, m) => getScale(k, m)}
           guitarChords={guitarChords}
-          showDiagrams={showDiagrams}
-          showCircle={showCircle}
-          showFretboards={showFretboards}
         />
-      ))}
+      )}
     </div>
   )}
