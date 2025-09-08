@@ -86,13 +86,13 @@ export default function ProgressionCard({ progression, keySig, mode, majorKeys =
         </div>
       )}
 
-      <div className="flex gap-2 flex-wrap mt-2">
-        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
+      <div className="flex gap-2 mt-2 md:flex-row flex-col">
+        <button className="w-full md:w-1/2 inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-3 py-2 hover:from-indigo-700 hover:to-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400" onClick={async () => {
           await sfChordPlayer.initialize()
           await sfChordPlayer.playProgression(progression.chords)
         }}>{t('progressions.playProgression') || 'Play progression'}</button>
 
-        <button className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-3 py-2 hover:from-emerald-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400" onClick={async () => {
+        <button className="w-full md:w-1/2 inline-flex justify-center items-center gap-2 rounded bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-3 py-2 hover:from-emerald-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400" onClick={async () => {
           await sfChordPlayer.initialize()
           await sfChordPlayer.playFullArrangement(
             progression.chords,
