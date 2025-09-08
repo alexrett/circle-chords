@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import ChordDiagram from './ChordDiagram'
 import CircleWrapper from './CircleWrapper'
 import { BassFretboard, VocalFretboard, NoteList } from './Fretboards'
-import type { GuitarChordVariation } from '../lib/types'
+import type { GuitarChordVariation, GeneratedProgression } from '../lib/types'
 import { chordPlayer } from '../lib/audio'
 import { getBassNotes as getBass } from '../lib/theory'
 
 export default function ProgressionCard({ progression, keySig, mode, majorKeys = [], minorKeys = [], notesList, getScale, guitarChords }: {
-  progression: { name: string; description?: string; chords: Array<{ name: string; notes: string[] }> }
+  progression: GeneratedProgression
   keySig: string
   mode: string
   majorKeys?: string[]

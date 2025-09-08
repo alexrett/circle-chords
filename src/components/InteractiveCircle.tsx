@@ -2,11 +2,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { generateProgressions as gen } from '../lib/theory'
 
-function polarToCartesian(cx, cy, r, angle) {
+function polarToCartesian(cx: number, cy: number, r: number, angle: number): [number, number] {
   return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)]
 }
 
-function ringSectorPath(cx, cy, rOuter, rInner, a1, a2) {
+function ringSectorPath(cx: number, cy: number, rOuter: number, rInner: number, a1: number, a2: number): string {
   const [x1o, y1o] = polarToCartesian(cx, cy, rOuter, a1)
   const [x2o, y2o] = polarToCartesian(cx, cy, rOuter, a2)
   const [x2i, y2i] = polarToCartesian(cx, cy, rInner, a2)

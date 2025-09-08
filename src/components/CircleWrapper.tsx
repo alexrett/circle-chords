@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { buildChord } from '../lib/theory'
 import { chordPlayer } from '../lib/audio'
 
-function polarToCartesian(cx, cy, r, angle) {
+function polarToCartesian(cx: number, cy: number, r: number, angle: number): [number, number] {
   return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)]
 }
 
-function ringSectorPath(cx, cy, rOuter, rInner, a1, a2) {
+function ringSectorPath(cx: number, cy: number, rOuter: number, rInner: number, a1: number, a2: number): string {
   const [x1o, y1o] = polarToCartesian(cx, cy, rOuter, a1)
   const [x2o, y2o] = polarToCartesian(cx, cy, rOuter, a2)
   const [x2i, y2i] = polarToCartesian(cx, cy, rInner, a2)
@@ -22,7 +22,7 @@ function ringSectorPath(cx, cy, rOuter, rInner, a1, a2) {
   ].join(' ')
 }
 
-export default function CircleWrapper({ keySig, mode, chords, progressionName, majorKeys = [], minorKeys = [] }: {
+export default function CircleWrapper({ keySig, mode, chords, progressionName: _progressionName, majorKeys = [], minorKeys = [] }: {
   keySig: string
   mode: string
   chords: Array<{ name: string }>
@@ -39,8 +39,8 @@ export default function CircleWrapper({ keySig, mode, chords, progressionName, m
   const angles = Array.from({ length: 12 }, (_, i) => ((i * 30 - 90) * Math.PI) / 180)
   const { t } = useTranslation()
 
-  const majorSet = new Set()
-  const minorSet = new Set()
+  const majorSet = new Set<string>()
+  const minorSet = new Set<string>()
   chords.forEach(ch => {
     if (ch.name.includes('m') && !ch.name.includes('maj')) {
       minorSet.add(ch.name.replace('m', ''))

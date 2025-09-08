@@ -8,7 +8,7 @@ import { loadAllConfig } from './lib/config'
 import { initTheory, generateProgressions as gen, getScale } from './lib/theory'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-import { chordPlayer } from './lib/audio'
+// audio handlers are imported where used
 
 const DEFAULT_NOTES = [
   'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
@@ -20,7 +20,7 @@ export default function App() {
   const [mode, setMode] = useState<string>('major')
   const [progressions, setProgressions] = useState<GeneratedProgression[]>([])
   const [notesList, setNotesList] = useState<string[]>(DEFAULT_NOTES)
-  const [language, setLanguage] = useState<string>('ru')
+  // language state not required; i18n hook drives translations
   const [circleData, setCircleData] = useState<{ majorKeys: string[]; minorKeys: string[] }>({ majorKeys: [], minorKeys: [] })
   const [modes, setModes] = useState<string[]>(['major', 'minor'])
   const [guitarChords, setGuitarChords] = useState<AppConfig['guitarChords']>({})
@@ -58,9 +58,9 @@ export default function App() {
     } catch (e) {
       console.error('Failed to generate progressions:', e)
     }
-  }, [ready, keySig, mode, language])
+  }, [ready, keySig, mode])
 
-  const onTonalityChange = (key, m) => {
+  const onTonalityChange = (key: string, m: string) => {
     setKeySig(key)
     setMode(m)
   }
@@ -71,7 +71,7 @@ export default function App() {
     <div className="max-w-[1100px] mx-auto p-4">
       <header className="flex items-center justify-between gap-3">
         <h1 className="m-0 text-xl font-semibold">{t('app.title') || 'Guitar Progression Generator'}</h1>
-        <LanguageSelector value={i18n.language} onChange={(lang) => { setLanguage(lang) }} />
+        <LanguageSelector value={i18n.language} onChange={() => { /* i18n handles language change */ }} />
       </header>
 
       <section className="mt-4">

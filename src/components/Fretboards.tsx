@@ -19,7 +19,7 @@ function FretHeader({ numFrets }: { numFrets: number }) {
   )
 }
 
-export function BassFretboard({ notes, title, notesList = DEFAULT_NOTES as any }: { notes: string[]; title?: string; notesList?: readonly string[] }) {
+export function BassFretboard({ notes, title, notesList = DEFAULT_NOTES }: { notes: string[]; title?: string; notesList?: readonly string[] }) {
   const openStrings = ['E', 'A', 'D', 'G']
   const numFrets = 12
   return (
@@ -44,7 +44,7 @@ export function BassFretboard({ notes, title, notesList = DEFAULT_NOTES as any }
   )
 }
 
-export function VocalFretboard({ notes, title, notesList = DEFAULT_NOTES as any }: { notes: string[]; title?: string; notesList?: readonly string[] }) {
+export function VocalFretboard({ notes, title, notesList = DEFAULT_NOTES }: { notes: string[]; title?: string; notesList?: readonly string[] }) {
   const openStrings = ['E', 'A', 'D', 'G', 'B', 'E']
   const numFrets = 12
   return (

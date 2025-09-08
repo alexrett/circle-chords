@@ -1,6 +1,5 @@
 import React from 'react'
 import type { GuitarChordVariation } from '../lib/types'
-
 import { useTranslation } from 'react-i18next'
 
 function FretPositionLabel({ startFret }: { startFret: number }) {
@@ -35,14 +34,14 @@ function Variation({ variation }: { variation: GuitarChordVariation }) {
       <div className="grid grid-cols-6 gap-1 mt-1">
         {Array.from({ length: endFret - startFret + 1 }).map((_, k) => {
           const fret = startFret + k
-          return Array.from({ length: 6 }).map((__, string) => {
-            const fretNumber = variation.frets[string]
-            const finger = variation.fingers[string]
+          return Array.from({ length: 6 }).map((__, stringIdx) => {
+            const fretNumber = variation.frets[stringIdx]
+            const finger = variation.fingers[stringIdx]
             const isFinger = fretNumber === fret && finger > 0
             const isX = fretNumber === null && fret === startFret
             const isO = fretNumber === 0 && fret === startFret
             return (
-              <div key={`${string}-${fret}`} className={`w-6 h-6 text-xs flex items-center justify-center border rounded ${isFinger ? 'bg-indigo-600 text-white' : ''}`}>
+              <div key={`${stringIdx}-${fret}`} className={`w-6 h-6 text-xs flex items-center justify-center border rounded ${isFinger ? 'bg-indigo-600 text-white' : ''}`}>
                 {isFinger ? finger : isX ? 'X' : isO ? 'O' : ''}
               </div>
             )
@@ -52,8 +51,6 @@ function Variation({ variation }: { variation: GuitarChordVariation }) {
     </div>
   )
 }
-
-import { useTranslation } from 'react-i18next'
 
 export default function ChordDiagram({ chordName, variations, onPlay }: { chordName: string; variations: GuitarChordVariation[]; onPlay?: () => void }) {
   const { t } = useTranslation()
