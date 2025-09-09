@@ -1,23 +1,22 @@
-# Application Configuration Documentation
+# Application Configuration Guide
 
 ## Overview
 
-All musical data (chords, progressions, scales, circle of fifths) is stored in JSON configuration files in the `/config/` folder. This allows easy extension and modification without editing code.
+The app loads musical data (scales, chords, progressions, circle of fifths) from JSON files at runtime. Files live under `public/config/` and are fetched by `src/lib/config.ts`. Editing these files requires no code changes or rebuilds (refresh the page).
 
-## Configuration Structure
+## Directory
 
 ```
-config/
-├── scales.json         # Scales, notes, and names
-├── chords.json         # Chord patterns and fingerings
-├── progressions.json   # Chord progressions
-├── circleOfFifths.json # Circle of fifths data
-└── configLoader.js     # Config loader
+public/config/
+├── scales.json         # Scales and 12-note names
+├── chords.json         # Chord interval patterns and guitar fingerings
+├── progressions.json   # Progressions per mode/scale
+└── circleOfFifths.json # Circle of fifths keys and relations
 ```
 
 ---
 
-## 1. Scales and Notes (`config/scales.json`)
+## 1) Scales and Notes (`public/config/scales.json`)
 
 ### File structure:
 ```json
@@ -32,7 +31,7 @@ config/
 }
 ```
 
-### Adding a new scale:
+### Add a new scale
 ```json
 {
   "scales": {
@@ -44,14 +43,13 @@ config/
 }
 ```
 
-**Example: Adding a blues scale**
-- Add a new entry under `scales`
-- Define intervals in semitones from tonic
-- It will automatically appear in the scale selector
+Notes
+- Intervals are semitones from the tonic within one octave.
+- UI modes are derived from keys of `scales` (no code changes needed).
 
 ---
 
-## 2. Chords (`config/chords.json`)
+## 2) Chords (`public/config/chords.json`)
 
 ### File structure:
 ```json
@@ -71,7 +69,7 @@ config/
 }
 ```
 
-### Adding a new chord type:
+### Add a new chord type
 ```json
 "chordPatterns": {
   "major": [0, 4, 7],
@@ -82,7 +80,7 @@ config/
 }
 ```
 
-### Adding a new fingering:
+### Add a new fingering
 ```json
 "guitarChords": {
   "C": [
@@ -100,7 +98,7 @@ config/
 }
 ```
 
-**Important rules:**
+Rules
 - `frets`: 6 elements (6 strings)
 - `null` = muted string
 - `0` = open string
@@ -109,7 +107,7 @@ config/
 
 ---
 
-## 3. Progressions (`config/progressions.json`)
+## 3) Progressions (`public/config/progressions.json`)
 
 ### File structure:
 ```json
@@ -127,7 +125,7 @@ config/
 }
 ```
 
-### Adding a new progression:
+### Add a new progression
 ```json
 "major": [
   {
@@ -145,14 +143,14 @@ config/
 ]
 ```
 
-**Rules:**
+Rules
 - `degrees`: scale steps (1-7)
 - `types`: chord types ("major", "minor", "dim", "maj7", "min7", "dom7")
 - Each scale can contain multiple progressions
 
 ---
 
-## 4. Circle of Fifths (`config/circleOfFifths.json`)
+## 4) Circle of Fifths (`public/config/circleOfFifths.json`)
 
 ### File structure:
 ```json
@@ -165,7 +163,7 @@ config/
 }
 ```
 
-**Usually doesn’t require changes**, but new keys can be added:
+Usually does not require changes, but new keys can be added:
 
 ```json
 {
@@ -238,31 +236,24 @@ config/
 ]
 ```
 
-**3. Update HTML selector:**
-```html
-<select id="mode-select">
-  <option value="major">Major</option>
-  <option value="minor">Minor</option>
-  <option value="harmonic_minor">Harmonic Minor</option>
-</select>
-```
+No UI edits required — modes are read from `scales.json`.
 
 ---
 
-## Quick Tips
+## Tips
 
-### ✅ Safe to add:
+### ✅ Safe to add
 - New fingerings
 - New progressions
 - New chord types (sus2, sus4, add9, etc.)
 - New scales and their progressions
 
-### ⚠️ Handle with care:
+### ⚠️ Handle with care
 - Changing base notes (may break logic)
 - Editing the circle of fifths
 - Modifying basic chord types (major/minor)
 
-### 🛠️ Testing changes:
+### 🛠️ Test changes
 1. Save JSON file
 2. Refresh the page
 3. Check console for errors
